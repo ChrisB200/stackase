@@ -18,10 +18,10 @@ function CompleteSignupForm({ handleSubmit }: CompleteSignupProps) {
     },
     {
       element: "input",
-      name: "nickname",
-      label: "Nickname",
+      name: "name",
+      label: "Name",
       type: "text",
-      placeholder: "Your nickname",
+      placeholder: "Your name",
       required: true,
     },
   ];

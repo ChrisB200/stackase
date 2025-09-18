@@ -65,6 +65,8 @@ export interface _RealtimeTenants {
   maxConcurrentUsers: Generated<number>;
   maxEventsPerSecond: Generated<number>;
   maxJoinsPerSecond: Generated<number>;
+  maxPayloadSizeInKb: Generated<number | null>;
+  maxPresenceEventsPerSecond: Generated<number | null>;
   migrationsRan: Generated<number | null>;
   name: string | null;
   notifyPrivateAlpha: Generated<boolean | null>;
@@ -229,6 +231,7 @@ export interface AuthSsoDomains {
 
 export interface AuthSsoProviders {
   createdAt: Timestamp | null;
+  disabled: boolean | null;
   id: string;
   /**
    * Auth: Uniquely identifies a SSO provider according to a user-chosen resource ID (case insensitive), useful in infrastructure as code.
@@ -276,11 +279,6 @@ export interface AuthUsers {
   recoveryToken: string | null;
   role: string | null;
   updatedAt: Timestamp | null;
-}
-
-export interface Categories {
-  id: Generated<string>;
-  name: string;
 }
 
 export interface ExtensionsPgStatStatements {
@@ -360,6 +358,13 @@ export interface NetHttpResponse {
   timedOut: boolean | null;
 }
 
+export interface Panels {
+  caption: Generated<string | null>;
+  id: Generated<number>;
+  pictureId: string;
+  stackId: number;
+}
+
 export interface RealtimeMessages {
   event: string | null;
   extension: string;
@@ -386,11 +391,10 @@ export interface RealtimeSubscription {
   subscriptionId: string;
 }
 
-export interface Rooms {
-  categoryId: string;
-  createdAt: Generated<Timestamp | null>;
-  id: Generated<string>;
-  topic: string;
+export interface Stacks {
+  description: string | null;
+  id: Generated<number>;
+  name: string;
   userId: string;
 }
 
@@ -516,9 +520,8 @@ export interface SupabaseMigrationsSchemaMigrations {
 }
 
 export interface Users {
-  authUserId: string;
-  id: Generated<string>;
-  nickname: string | null;
+  id: string;
+  name: string | null;
   username: string | null;
 }
 
@@ -565,15 +568,15 @@ export interface DB {
   "auth.ssoDomains": AuthSsoDomains;
   "auth.ssoProviders": AuthSsoProviders;
   "auth.users": AuthUsers;
-  categories: Categories;
   "extensions.pgStatStatements": ExtensionsPgStatStatements;
   "extensions.pgStatStatementsInfo": ExtensionsPgStatStatementsInfo;
   "net.httpRequestQueue": NetHttpRequestQueue;
   "net.HttpResponse": NetHttpResponse;
+  panels: Panels;
   "realtime.messages": RealtimeMessages;
   "realtime.schemaMigrations": RealtimeSchemaMigrations;
   "realtime.subscription": RealtimeSubscription;
-  rooms: Rooms;
+  stacks: Stacks;
   "storage.buckets": StorageBuckets;
   "storage.bucketsAnalytics": StorageBucketsAnalytics;
   "storage.icebergNamespaces": StorageIcebergNamespaces;

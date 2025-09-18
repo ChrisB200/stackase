@@ -1,6 +1,8 @@
 import { createClient } from "redis";
 
-export const redisClient = createClient();
+export const redisClient = createClient({
+  url: "redis://:password@127.0.0.1:6379/0",
+});
 redisClient.on("error", (err) => console.error("Redis Client Error", err));
 
 export const pubClient = redisClient.duplicate();

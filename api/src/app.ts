@@ -7,8 +7,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import { connectRedisClients } from "./config/redis";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
-import roomRoutes from "./routes/roomRoutes";
-import categoryRoutes from "./routes/categoryRoutes";
+import stackRoutes from "./routes/stackRoutes";
+import panelRoutes from "./routes/panelRoutes";
 
 (async () => {
   await connectRedisClients();
@@ -27,8 +27,8 @@ app.use(morgan("dev"));
 
 // routes
 app.use("/auth", authRoutes);
-app.use("/rooms", roomRoutes);
-app.use("/categories", categoryRoutes);
+app.use("/stacks", stackRoutes);
+app.use("/panels", panelRoutes);
 
 // error handler
 app.use(errorHandler);

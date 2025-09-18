@@ -12,7 +12,6 @@ import CompleteSignup from "./pages/CompleteSignup/CompleteSignup";
 import { UserProvider } from "./contexts/UserContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthCallback from "./pages/AuthCallback/AuthCallback";
-import RoomCreation from "./pages/RoomCreation/RoomCreation";
 
 function App() {
   return (
@@ -29,7 +28,6 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<CompleteSignup />} />
-              <Route path="/create/room" element={<RoomCreation />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
