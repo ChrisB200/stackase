@@ -1,0 +1,9 @@
+CREATE TABLE "users" (
+  id UUID PRIMARY KEY UNIQUE NOT NULL,
+  username TEXT,
+  name TEXT,
+
+  FOREIGN KEY ("id") REFERENCES auth.users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
