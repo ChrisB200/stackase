@@ -1,23 +1,21 @@
 import { NextFunction, Request, Response } from "express";
-import { getAuthorizationToken, validateToken } from "../utils/jwt";
+import { getAuthorizationToken } from "../utils/jwt";
 import { db } from "../config/database";
-import { SupabaseJWT } from "../types/supabase";
 import { SessionData } from "express-session";
 import AppError from "../utils/appError";
+import { supabase } from "../config/supabase";
 
 // Function to handle token validation and user session update
 async function handleToken(token: string, session: Partial<SessionData>) {
-  const data = validateToken<SupabaseJWT>(token);
-  if (!data) {
-    session.user = undefined;
+  const { data } = await supabase.auth.getUser(token);
+  if (!data.user)
     throw new AppError("Unauthorised access", 401, "UNAUTHORISED");
-  }
 
   // Fetch the user based on the token data (e.g., authUserId)
   let user = await db
     .selectFrom("users")
     .selectAll()
-    .where("id", "=", data.sub)
+    .where("id", "=", data.user.id)
     .executeTakeFirst();
 
   if (user) {

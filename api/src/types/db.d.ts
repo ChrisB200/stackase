@@ -338,6 +338,13 @@ export interface ExtensionsPgStatStatementsInfo {
   statsReset: Timestamp | null;
 }
 
+export interface Formats {
+  description: string;
+  id: Generated<number>;
+  number: number | null;
+  title: string;
+}
+
 export interface NetHttpRequestQueue {
   body: Buffer | null;
   headers: Json;
@@ -360,7 +367,9 @@ export interface NetHttpResponse {
 
 export interface Panels {
   caption: Generated<string | null>;
+  formatId: number;
   id: Generated<number>;
+  media: string;
   pictureId: string;
   stackId: number;
 }
@@ -392,7 +401,6 @@ export interface RealtimeSubscription {
 }
 
 export interface Stacks {
-  description: string | null;
   id: Generated<number>;
   name: string;
   userId: string;
@@ -570,6 +578,7 @@ export interface DB {
   "auth.users": AuthUsers;
   "extensions.pgStatStatements": ExtensionsPgStatStatements;
   "extensions.pgStatStatementsInfo": ExtensionsPgStatStatementsInfo;
+  formats: Formats;
   "net.httpRequestQueue": NetHttpRequestQueue;
   "net.HttpResponse": NetHttpResponse;
   panels: Panels;
