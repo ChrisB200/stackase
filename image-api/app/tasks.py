@@ -7,6 +7,8 @@ from sentence_transformers import SentenceTransformer
 from .config.supabase import (download_bytes, download_image, get_file_name,
                               supabase, vx)
 
+model = SentenceTransformer("clip-ViT-B-32")
+
 
 # TODO: Add error checking and rollbacks
 @shared_task
@@ -60,11 +62,9 @@ def upload_panel_img(value: dict):
 def generate_embedding(path: str):
     img = download_image("panels", path)
     images = vx.get_or_create_collection(name="image_vectors", dimension=512)
-    model = SentenceTransformer("clip-ViT-B-32")
 
     emb1 = model.encode(img)
 
     images.upsert(records=[(path.split(".png")[0], emb1, {"type": "png"})])
-    images.create_index()
 
     return "success"

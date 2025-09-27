@@ -1,12 +1,9 @@
-from io import BytesIO
-
 from celery import chain
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, jsonify, request
 from PIL import Image
-from sentence_transformers import SentenceTransformer
 
-from ..config.supabase import supabase, vx
-from ..tasks import compress_image, generate_embedding, upload_panel_img
+from ..config.supabase import vx
+from ..tasks import compress_image, generate_embedding, model, upload_panel_img
 from ..utils.exceptions import AppError
 
 images_bp = Blueprint("images", __name__)
@@ -31,8 +28,6 @@ def upload_image():
 @images_bp.get("/search")
 def search():
     file = request.files.get("image")
-
-    model = SentenceTransformer("clip-ViT-B-32")
 
     images = vx.get_or_create_collection(name="image_vectors", dimension=512)
     img = Image.open(file.stream).convert("RGB")
