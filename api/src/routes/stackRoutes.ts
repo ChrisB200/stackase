@@ -6,6 +6,6 @@ const router = Router();
 
 router.post("/", protectedRoute, createStack);
 
-router.get("/", protectedRoute, getStacks);
+router.get("/:userId", protectedRoute, getStacks);
 
 export default router;

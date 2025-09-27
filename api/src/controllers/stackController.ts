@@ -15,9 +15,12 @@ const createStack: RequestHandler = async (req, res) => {
 };
 
 const getStacks: RequestHandler = async (req, res) => {
-  const user = req.session.user!;
-
-  const stacks = await db.selectFrom("stacks").selectAll().execute();
+  const { userId } = req.params;
+  const stacks = await db
+    .selectFrom("stacks")
+    .selectAll()
+    .where("userId", "=", userId)
+    .execute();
 
   res.status(200).json(stacks);
 };
