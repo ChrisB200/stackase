@@ -1,21 +1,72 @@
-from io import BytesIO
+import os
+import subprocess
+import tempfile
 
 from celery import shared_task
-from PIL import Image
+from sentence_transformers import SentenceTransformer
 
-from .config.models import model
-from .config.supabase import supabase, vx
+from .config.supabase import (download_bytes, download_image, get_file_name,
+                              supabase, vx)
+
+
+# TODO: Add error checking and rollbacks
+@shared_task
+def compress_image(key: str):
+    img = download_bytes("panels", key)
+    name = get_file_name(key)
+    path = f"{name}.png"
+
+    process = subprocess.Popen(
+        [
+            "ffmpeg",
+            "-i",
+            "pipe:0",
+            "-vf",
+            "format=rgba",
+            "-compression_level",
+            "9",
+            path,
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    stdout, stderr = process.communicate(input=img)
+
+    print("ffmpeg return code:", process.returncode)
+    print("stderr:", stderr.decode())
+
+    return {"path": path, "key": key}
+
+
+@shared_task
+def upload_panel_img(value: dict):
+    path = value.get("path")
+    key = value.get("key")
+
+    print(path)
+    print(key)
+
+    with open(path, "rb") as file:
+        supabase.storage.from_("panels").upload(path, file)
+
+    # cleanup
+    os.remove(path)
+    supabase.storage.from_("panels").remove([key])
+
+    return path
 
 
 @shared_task()
-def generate_embedding(stack_id, picture_id):
-    path = f"{stack_id}/{picture_id}.jpg"
-    response = supabase.storage.from_("panels").download(path)
-    img = Image.open(BytesIO(response)).convert("RGB")
+def generate_embedding(path: str):
+    img = download_image("panels", path)
     images = vx.get_or_create_collection(name="image_vectors", dimension=512)
+    model = SentenceTransformer("clip-ViT-B-32")
 
     emb1 = model.encode(img)
 
-    images.upsert(records=[(picture_id, emb1, {"type": "jpeg"})])
-
+    images.upsert(records=[(path.split(".png")[0], emb1, {"type": "png"})])
     images.create_index()
+
+    return "success"

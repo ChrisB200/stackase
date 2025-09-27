@@ -1,9 +1,10 @@
 import { RequestHandler } from "express";
 import AppError from "../utils/appError";
-import { v4 as uuid4 } from "uuid";
+import { db } from "../config/database";
+import axios from "axios";
 import path from "path";
 import { supabase } from "../config/supabase";
-import { db } from "../config/database";
+import env from "../config/constants";
 
 const createPanel: RequestHandler = async (req, res) => {
   const { caption, stackId, format, origin, media } = req.body;
@@ -23,33 +24,26 @@ const createPanel: RequestHandler = async (req, res) => {
   if (!media)
     throw new AppError("No media was provided", 400, "MISSING_FIELDS");
 
-  const pictureId = uuid4();
-  const filename = `${pictureId}${path.extname(file.originalname)}`;
-  const supabasePath = `${stackId}/${filename}`;
+  const panel = await db
+    .insertInto("panels")
+    .values({ caption, stackId, origin, media, format })
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  const key = `temp/${panel.id}${path.extname(file.originalname)}`;
 
   const { error } = await supabase.storage
     .from("panels")
-    .upload(supabasePath, file.buffer, {
+    .upload(key, file.buffer, {
       cacheControl: "3600",
       upsert: false,
       contentType: file.mimetype,
     });
 
-  if (error) throw new AppError(error.message, 500, error.name);
+  // TODO: rollback db changes
+  if (error) throw new AppError(error.message, 500);
 
-  const panel = await db
-    .insertInto("panels")
-    .values({ pictureId, caption, stackId, origin, media, format })
-    .returningAll()
-    .executeTakeFirst();
-
-  if (!panel) {
-    const { data, error } = await supabase.storage
-      .from("panels")
-      .remove([supabasePath]);
-
-    throw new AppError("A DB error occurred", 500);
-  }
+  axios.post(`${env.FLASK_URL}/images`, { key });
 
   res.status(200).json(panel);
 };

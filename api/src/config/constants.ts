@@ -25,6 +25,7 @@ const env = {
   SESSION_SECRET_KEY: getEnvVar("SESSION_SECRET_KEY"),
   SUPABASE_JWT_SECRET_KEY: getEnvVar("SUPABASE_JWT_SECRET_KEY"),
   FRONTEND_URL: getEnvVar("FRONTEND_URL"),
+  FLASK_URL: "http://localhost:8080",
 };
 
 export default env;

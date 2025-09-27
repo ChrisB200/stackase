@@ -1,6 +1,5 @@
 CREATE TABLE "panels" (
   id SERIAL PRIMARY KEY,
-  picture_id UUID NOT NULL,
   caption TEXT DEFAULT '',
   media TEXT NOT NULL,
   stack_id INTEGER NOT NULL,
