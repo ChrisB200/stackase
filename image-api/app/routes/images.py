@@ -29,7 +29,7 @@ def upload_image():
 def search():
     file = request.files.get("image")
 
-    images = vx.get_or_create_collection(name="image_vectors", dimension=512)
+    images = vx.get_or_create_collection(name="panels")
     img = Image.open(file.stream).convert("RGB")
 
     emb = model.encode(img)

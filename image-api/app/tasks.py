@@ -61,7 +61,7 @@ def upload_panel_img(value: dict):
 @shared_task()
 def generate_embedding(path: str):
     img = download_image("panels", path)
-    images = vx.get_or_create_collection(name="image_vectors", dimension=512)
+    images = vx.get_or_create_collection(name="panels", dimension=512)
 
     emb1 = model.encode(img)
 
