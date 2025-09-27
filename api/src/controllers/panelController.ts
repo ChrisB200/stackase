@@ -6,13 +6,22 @@ import { supabase } from "../config/supabase";
 import { db } from "../config/database";
 
 const createPanel: RequestHandler = async (req, res) => {
-  const { caption, stackId } = req.body;
+  const { caption, stackId, format, origin, media } = req.body;
   const file = req.file;
 
   if (!file) throw new AppError("Missing panelImage", 400, "MISSING_FIELDS");
 
   if (!caption || !stackId)
     throw new AppError("Missing fields", 400, "MISSING_FIELDS");
+
+  if (!format)
+    throw new AppError("No format was provided", 400, "MISSING_FIELDS");
+
+  if (!origin)
+    throw new AppError("No origin was provided", 400, "MISSING_FIELDS");
+
+  if (!media)
+    throw new AppError("No media was provided", 400, "MISSING_FIELDS");
 
   const pictureId = uuid4();
   const filename = `${pictureId}${path.extname(file.originalname)}`;
@@ -30,7 +39,7 @@ const createPanel: RequestHandler = async (req, res) => {
 
   const panel = await db
     .insertInto("panels")
-    .values({ pictureId, caption, stackId })
+    .values({ pictureId, caption, stackId, origin, media, format })
     .returningAll()
     .executeTakeFirst();
 

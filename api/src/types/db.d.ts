@@ -35,6 +35,8 @@ export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
+export type PanelFormat = "COVER" | "OTHER" | "PANEL" | "STRIP" | "VOLUME";
+
 export type StorageBuckettype = "ANALYTICS" | "STANDARD";
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
@@ -338,13 +340,6 @@ export interface ExtensionsPgStatStatementsInfo {
   statsReset: Timestamp | null;
 }
 
-export interface Formats {
-  description: string;
-  id: Generated<number>;
-  number: number | null;
-  title: string;
-}
-
 export interface NetHttpRequestQueue {
   body: Buffer | null;
   headers: Json;
@@ -367,9 +362,10 @@ export interface NetHttpResponse {
 
 export interface Panels {
   caption: Generated<string | null>;
-  formatId: number;
+  format: Generated<PanelFormat>;
   id: Generated<number>;
   media: string;
+  origin: string;
   pictureId: string;
   stackId: number;
 }
@@ -578,7 +574,6 @@ export interface DB {
   "auth.users": AuthUsers;
   "extensions.pgStatStatements": ExtensionsPgStatStatements;
   "extensions.pgStatStatementsInfo": ExtensionsPgStatStatementsInfo;
-  formats: Formats;
   "net.httpRequestQueue": NetHttpRequestQueue;
   "net.HttpResponse": NetHttpResponse;
   panels: Panels;
