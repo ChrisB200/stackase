@@ -1,6 +1,5 @@
 import os
 import subprocess
-import tempfile
 
 from celery import shared_task
 from sentence_transformers import SentenceTransformer
@@ -45,11 +44,10 @@ def upload_panel_img(value: dict):
     path = value.get("path")
     key = value.get("key")
 
-    print(path)
-    print(key)
-
     with open(path, "rb") as file:
-        supabase.storage.from_("panels").upload(path, file)
+        supabase.storage.from_("panels").upload(
+            path, file, file_options={"content-type": "image/png"}
+        )
 
     # cleanup
     os.remove(path)

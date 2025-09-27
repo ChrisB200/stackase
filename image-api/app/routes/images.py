@@ -30,31 +30,16 @@ def upload_image():
 
 @images_bp.get("/search")
 def search():
-    stack_id = request.json.get("stackId")
-    picture_id = request.json.get("pictureId")
+    file = request.files.get("image")
+
     model = SentenceTransformer("clip-ViT-B-32")
 
     images = vx.get_or_create_collection(name="image_vectors", dimension=512)
-    path = f"{stack_id}/{picture_id}.jpg"
-    response = supabase.storage.from_("panels").download(path)
-    img = Image.open(BytesIO(response)).convert("RGB")
+    img = Image.open(file.stream).convert("RGB")
 
     emb = model.encode(img)
 
-    results = images.query(data=emb)
+    results = images.query(data=emb, limit=1)
+    urls = [f"{result}.png" for result in results]
 
-    # Get the ID from the result
-    picture_id = results[0]  # or however your vector DB returns it
-    stack_id = stack_id  # already available from request
-
-    # Construct Supabase storage path
-    path = f"{stack_id}/{picture_id}.jpg"
-
-    # Get the best match id -> reconstruct path (or get from metadata if stored)
-    print(results)
-    best_id = results[0]
-    best_path = f"{stack_id}/{best_id}.jpg"
-    best_image_bytes = supabase.storage.from_("panels").download(best_path)
-
-    # Return image as HTTP response
-    return send_file(BytesIO(best_image_bytes), mimetype="image/jpeg")
+    return jsonify(urls), 200
