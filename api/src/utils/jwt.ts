@@ -1,11 +1,26 @@
 import jwt from "jsonwebtoken";
 import config from "../config/constants";
 import { Request } from "express";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const generateToken = (data: any, expires = 3600000) => {
+let token: string | null = null;
+
+export const getToken = () => {
+  return token;
+};
+
+export const setToken = (newToken: string) => {
+  token = newToken;
+};
+
+export const generateToken = (
+  data: any,
+  expires = 3600000,
+  secret = config.SUPABASE_JWT_SECRET_KEY,
+) => {
   const expiry = Date.now() + expires;
   const newData = { ...data, expiry };
-  const token = jwt.sign(newData, config.SUPABASE_JWT_SECRET_KEY);
+  const token = jwt.sign(newData, secret);
   return token;
 };
 

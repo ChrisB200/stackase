@@ -5,6 +5,7 @@ import axios from "axios";
 import path from "path";
 import { supabase } from "../config/supabase";
 import env from "../config/constants";
+import { requestML } from "../utils/api";
 
 const createPanel: RequestHandler = async (req, res) => {
   const { caption, stackId, format, origin, media } = req.body;
@@ -43,7 +44,7 @@ const createPanel: RequestHandler = async (req, res) => {
   // TODO: rollback db changes
   if (error) throw new AppError(error.message, 500);
 
-  axios.post(`${env.FLASK_URL}/images`, { key });
+  await requestML({ method: "post", url: "/images", data: { key } });
 
   res.status(200).json(panel);
 };

@@ -5,11 +5,13 @@ from PIL import Image
 from ..config.supabase import vx
 from ..tasks import compress_image, generate_embedding, model, upload_panel_img
 from ..utils.exceptions import AppError
+from ..utils.security import authenticated
 
 images_bp = Blueprint("images", __name__)
 
 
 @images_bp.post("/")
+@authenticated
 def upload_image():
     key = request.json.get("key")
 
@@ -26,15 +28,16 @@ def upload_image():
 
 
 @images_bp.get("/search")
+@authenticated
 def search():
     file = request.files.get("image")
 
-    images = vx.get_or_create_collection(name="panels")
+    images = vx.get_or_create_collection(name="panels", dimension=512)
     img = Image.open(file.stream).convert("RGB")
 
     emb = model.encode(img)
 
-    results = images.query(data=emb, limit=1)
+    results = images.query(data=emb)
     urls = [f"{result}.png" for result in results]
 
     return jsonify(urls), 200
