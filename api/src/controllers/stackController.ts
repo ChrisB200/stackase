@@ -32,4 +32,35 @@ const getStack: RequestHandler = async (req, res) => {
   res.status(200).json(stack);
 };
 
-export { createStack, getStack };
+const getStackByUsernameTitle: RequestHandler = async (req, res) => {
+  const { username, stackTitle } = req.params;
+
+  if (!username || !stackTitle)
+    throw new AppError("Missing fields", 400, "MISSING_FIELDS");
+
+  const stack = await db
+    .selectFrom("stacks")
+    .leftJoin("users", "stacks.userId", "users.id")
+    .where("users.username", "ilike", username)
+    .where("stacks.title", "ilike", stackTitle)
+    .selectAll()
+    .select(["stacks.id as id"])
+    .executeTakeFirst();
+
+  if (!stack) throw new AppError("Stack not found", 404, "DOES_NOT_EXIST");
+
+  const panels = await db
+    .selectFrom("panels")
+    .selectAll()
+    .where("stackId", "=", stack.id)
+    .execute();
+
+  const combined = {
+    ...stack,
+    panels,
+  };
+
+  res.status(200).json(combined);
+};
+
+export { createStack, getStack, getStackByUsernameTitle };
