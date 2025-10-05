@@ -4,7 +4,7 @@ import { db } from "../config/database";
 import path from "path";
 import { supabase } from "../config/supabase";
 import { requestML } from "../utils/api";
-import { sql } from "kysely";
+import { rollbackInsert, rollbackStorage } from "../utils/rollback";
 
 const createPanel: RequestHandler = async (req, res) => {
   const { caption, stackId, format, origin, media } = req.body;
@@ -41,9 +41,23 @@ const createPanel: RequestHandler = async (req, res) => {
     });
 
   // TODO: rollback db changes
-  if (error) throw new AppError(error.message, 500);
+  if (error) {
+    await rollbackStorage("panels", key);
+    await rollbackInsert("panels", panel.id);
+    throw new AppError(error.message, 500);
+  }
 
-  await requestML({ method: "post", url: "/images", data: { key } });
+  try {
+    const response = await requestML({
+      method: "post",
+      url: "/images",
+      data: { key },
+    });
+  } catch (error) {
+    await rollbackStorage("panels", key);
+    await rollbackInsert("panels", panel.id);
+    throw new AppError("Could not upload image", 400, "ML_ERROR");
+  }
 
   res.status(200).json(panel);
 };

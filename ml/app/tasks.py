@@ -38,6 +38,16 @@ def compress_image(key: str):
     print("ffmpeg return code:", process.returncode)
     print("stderr:", stderr.decode())
 
+    if process.returncode != 0:
+        print("ffmpeg error " + stderr.decode())
+
+        if os.path.exists(path):
+            os.remove(path)
+
+        raise RuntimeError(
+            f"ffmpeg failed with code {process.returncode}: {stderr.decode()}"
+        )
+
     return {"path": path, "key": key}
 
 
@@ -46,14 +56,19 @@ def upload_panel_img(value: dict):
     path = value.get("path")
     key = value.get("key")
 
-    with open(path, "rb") as file:
-        supabase.storage.from_("panels").upload(
-            path, file, file_options={"content-type": "image/png"}
-        )
-
-    # cleanup
-    os.remove(path)
-    supabase.storage.from_("panels").remove([key])
+    try:
+        with open(path, "rb") as file:
+            supabase.storage.from_("panels").upload(
+                path, file, file_options={"content-type": "image/png"}
+            )
+    except Exception as e:
+        print(str(e))
+        raise RuntimeError(f"failed to upload {key}")
+    finally:
+        # cleanup
+        if os.path.exists(path):
+            os.remove(path)
+        supabase.storage.from_("panels").remove([key])
 
     return path
 
@@ -62,9 +77,7 @@ def upload_panel_img(value: dict):
 def generate_embedding(path: str):
     img = download_image("panels", path)
     images = vx.get_or_create_collection(name="panels", dimension=512)
-
     emb1 = model.encode(img)
-
     images.upsert(records=[(path.split(".png")[0], emb1, {"type": "png"})])
 
     return "success"

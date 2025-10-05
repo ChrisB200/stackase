@@ -22,7 +22,10 @@ def upload_image():
     workflow = chain(
         compress_image.s(key), upload_panel_img.s(), generate_embedding.s()
     )
-    result = workflow()
+    try:
+        result = workflow()
+    except Exception as e:
+        return jsonify(error="INTERNAL SERVER ERROR"), 500
 
     return jsonify(result.id), 200
 
