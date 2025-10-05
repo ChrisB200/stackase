@@ -27,8 +27,9 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/:username/stacks" element={<UserStacks />} />
+            <Route path="/:username/:stackTite" element={<UserStacks />} />
+            <Route path="/" element={<Home />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<CompleteSignup />} />
             </Route>
             <Route path="*" element={<NotFound />} />

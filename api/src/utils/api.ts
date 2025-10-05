@@ -49,7 +49,7 @@ export async function requestML<T = any>(
     if (error.response?.status === 401) {
       try {
         const token = generateToken({}, 3600, env.APP_SECRET_KEY);
-        setToken("googoogaga");
+        setToken(token);
         response = await api.request<T>(config);
       } catch (retryError: any) {
         throw new AppError(

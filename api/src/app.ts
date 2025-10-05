@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
 import stackRoutes from "./routes/stackRoutes";
 import panelRoutes from "./routes/panelRoutes";
+import userRoutes from "./routes/userRoutes";
 
 (async () => {
   await connectRedisClients();
@@ -29,6 +30,7 @@ app.use(morgan("dev"));
 app.use("/auth", authRoutes);
 app.use("/stacks", stackRoutes);
 app.use("/panels", panelRoutes);
+app.use("/users", userRoutes);
 
 // error handler
 app.use(errorHandler);

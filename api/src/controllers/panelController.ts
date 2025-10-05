@@ -1,11 +1,10 @@
 import { RequestHandler } from "express";
 import AppError from "../utils/appError";
 import { db } from "../config/database";
-import axios from "axios";
 import path from "path";
 import { supabase } from "../config/supabase";
-import env from "../config/constants";
 import { requestML } from "../utils/api";
+import { sql } from "kysely";
 
 const createPanel: RequestHandler = async (req, res) => {
   const { caption, stackId, format, origin, media } = req.body;
@@ -49,4 +48,26 @@ const createPanel: RequestHandler = async (req, res) => {
   res.status(200).json(panel);
 };
 
-export { createPanel };
+const getPanels: RequestHandler = async (req, res) => {
+  const { include } = req.query;
+
+  const options = {
+    include: include ? include : null,
+  };
+
+  let query = db.selectFrom("panels").selectAll();
+
+  console.log(options);
+  if (options.include === "stacks") {
+    query = query
+      .leftJoin("stacks", "panels.stackId", "stacks.id")
+      .leftJoin("users", "stacks.userId", "users.id")
+      .select(["username", "panels.id as id", "stacks.title as title", "name"]);
+  }
+
+  const panels = await query.execute();
+
+  res.status(200).json(panels);
+};
+
+export { createPanel, getPanels };

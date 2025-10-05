@@ -1,28 +1,35 @@
 import type { RequestHandler } from "express";
 import { db } from "../config/database";
+import AppError from "../utils/appError";
 
 const createStack: RequestHandler = async (req, res) => {
-  const { name } = req.body;
+  const { title } = req.body;
   const user = req.session.user!;
 
   const stack = await db
     .insertInto("stacks")
-    .values({ name, userId: user.id })
+    .values({ title, userId: user.id })
     .returningAll()
     .executeTakeFirstOrThrow();
 
   res.status(200).json(stack);
 };
 
-const getStacks: RequestHandler = async (req, res) => {
-  const { userId } = req.params;
-  const stacks = await db
+const getStack: RequestHandler = async (req, res) => {
+  const { stackId } = req.params;
+
+  if (!stackId)
+    throw new AppError("No stack id was provided", 400, "MISSING_FIELDS");
+
+  const stack = await db
     .selectFrom("stacks")
     .selectAll()
-    .where("userId", "=", userId)
+    .where("stacks.id", "=", parseInt(stackId))
+    .leftJoin("users", "users.id", "stacks.userId")
+    .select(["stacks.id as id"])
     .execute();
 
-  res.status(200).json(stacks);
+  res.status(200).json(stack);
 };
 
-export { createStack, getStacks };
+export { createStack, getStack };

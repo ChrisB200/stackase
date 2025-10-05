@@ -397,7 +397,7 @@ export interface RealtimeSubscription {
 
 export interface Stacks {
   id: Generated<number>;
-  name: string;
+  title: string;
   userId: string;
 }
 
@@ -551,6 +551,13 @@ export interface VaultSecrets {
   updatedAt: Generated<Timestamp>;
 }
 
+export interface VecsPanels {
+  createdAt: Generated<Timestamp | null>;
+  id: number;
+  metadata: Generated<Json>;
+  vec: string;
+}
+
 export interface DB {
   "_Realtime.extensions": _RealtimeExtensions;
   "_Realtime.schemaMigrations": _RealtimeSchemaMigrations;
@@ -595,4 +602,5 @@ export interface DB {
   users: Users;
   "vault.decryptedSecrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;
+  "vecs.panels": VecsPanels;
 }

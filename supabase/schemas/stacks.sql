@@ -1,6 +1,6 @@
 CREATE TABLE "stacks" (
   id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
+  title TEXT NOT NULL,
   user_id UUID NOT NULL,
 
   FOREIGN KEY ("user_id") REFERENCES public.users(id)

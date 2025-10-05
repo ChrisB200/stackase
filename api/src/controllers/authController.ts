@@ -1,7 +1,7 @@
 import { db } from "../config/database";
 import { supabase } from "../config/supabase";
-import AppError from "../utils/appError";
 import { RequestHandler } from "express";
+import AppError from "../utils/appError";
 
 const completeSignup: RequestHandler = async (req, res) => {
   const { username, name } = req.body;
@@ -32,12 +32,16 @@ const isAuthenticated: RequestHandler = async (req, res) => {
 };
 
 const signup: RequestHandler = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username, name } = req.body;
 
-  if (!email || !password)
+  if (!email || !password || !username || !name)
     throw new AppError("Missing fields", 400, "MISSING_FIELDS");
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { username, name } },
+  });
 
   if (error) throw new AppError(error.message, 400, error.code);
 

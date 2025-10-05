@@ -1,5 +1,5 @@
 export const getQueryParam = (
-  parameter: string
+  parameter: string,
 ): { encoded: string; decoded: string } => {
   const queryParams = new URLSearchParams(location.search);
   const decoded = decodeURIComponent(queryParams.get(parameter) || "");
@@ -33,11 +33,11 @@ export function makeURL({
 
   // remove null or undefined query parameters
   const cleanedParams = Object.fromEntries(
-    Object.entries(queryParams).filter(([_, v]) => v != null)
+    Object.entries(queryParams).filter(([_, v]) => v != null),
   );
 
   const queryString = new URLSearchParams(
-    cleanedParams as Record<string, string>
+    cleanedParams as Record<string, string>,
   ).toString();
 
   if (queryString) {
@@ -45,4 +45,10 @@ export function makeURL({
   }
 
   return url;
+}
+
+export function createStackURL(username: string, title: string) {
+  const dashed = title.replace(/\s+/g, "-").toLowerCase();
+  console.log(dashed);
+  return `${username}/${dashed}`.toLowerCase();
 }
