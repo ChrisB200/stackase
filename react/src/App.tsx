@@ -13,6 +13,7 @@ import { UserProvider } from "./contexts/UserContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthCallback from "./pages/AuthCallback/AuthCallback";
 import UserStacks from "./pages/UserStacks/UserStacks";
+import StackShowcase from "./pages/StackShowcase/StackShowcase";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/:username/stacks" element={<UserStacks />} />
-            <Route path="/:username/:stackTite" element={<UserStacks />} />
+            <Route path="/:username/:stackTitle" element={<StackShowcase />} />
             <Route path="/" element={<Home />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/onboarding" element={<CompleteSignup />} />

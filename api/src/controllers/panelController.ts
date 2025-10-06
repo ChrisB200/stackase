@@ -5,6 +5,7 @@ import path from "path";
 import { supabase } from "../config/supabase";
 import { requestML } from "../utils/api";
 import { rollbackInsert, rollbackStorage } from "../utils/rollback";
+import { sql } from "kysely";
 
 const createPanel: RequestHandler = async (req, res) => {
   const { caption, stackId, format, origin, media } = req.body;
@@ -69,7 +70,10 @@ const getPanels: RequestHandler = async (req, res) => {
     include: include ? include : null,
   };
 
-  let query = db.selectFrom("panels").selectAll();
+  let query = db
+    .selectFrom("panels")
+    .selectAll()
+    .orderBy(sql`random()`);
 
   console.log(options);
   if (options.include === "stacks") {

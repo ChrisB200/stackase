@@ -52,3 +52,8 @@ export function createStackURL(username: string, title: string) {
   console.log(dashed);
   return `${username}/${dashed}`.toLowerCase();
 }
+
+export function decodeStackURL(dashedTitle: string) {
+  const title = dashedTitle.replace(/-/g, " ");
+  return title;
+}

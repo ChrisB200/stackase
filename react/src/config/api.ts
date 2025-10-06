@@ -13,8 +13,6 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const { data, error } = await supabase.auth.getSession();
-  console.log(data);
-  console.log(error);
   const accessToken = data?.session?.access_token;
   if (accessToken) {
     config.headers = config.headers || {};
