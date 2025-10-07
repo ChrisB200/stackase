@@ -13,6 +13,7 @@ interface StackContextType {
   finished: boolean;
   panel?: Panel | null;
   panels: Panel[];
+  setPanelURL: (panel: Panel) => void;
 }
 
 export const StackContext = createContext<StackContextType | null>(null);
@@ -23,10 +24,13 @@ interface StackProviderProps {
 
 export const StackProvider = ({ children }: StackProviderProps) => {
   const { username, stackTitle } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setURLSearchParams] = useSearchParams();
   const [panel, setPanel] = useState<Panel | null>(null);
   const [panels, setPanels] = useState<Panel[]>([]);
-  const panelId = searchParams.get("panel");
+
+  const setPanelURL = (panel: Panel) => {
+    setURLSearchParams({ panel: panel.id.toString() });
+  };
 
   // stack has a chance to not exist
   if (!username || !stackTitle)
@@ -38,6 +42,7 @@ export const StackProvider = ({ children }: StackProviderProps) => {
           error: "username and stack title not present",
           panels,
           finished: true,
+          setPanelURL,
         }}
       >
         {children}
@@ -59,13 +64,23 @@ export const StackProvider = ({ children }: StackProviderProps) => {
 
     // sort the panels within the stack
     setPanels(stack.panels.sort((a, b) => a.position - b.position));
-
-    // get panel from search params
-    if (panelId)
-      setPanel(
-        stack.panels.filter((panel) => panel.id === parseInt(panelId))[0],
-      );
   }, [stack]);
+
+  useEffect(() => {
+    if (!stack) {
+      setPanel(null);
+      return;
+    }
+
+    const id = searchParams.get("panel");
+    // get panel from search params
+    if (id) {
+      setPanel(stack.panels.filter((panel) => panel.id === parseInt(id))[0]);
+    } else {
+      setPanel(null);
+      return;
+    }
+  }, [searchParams, stack]);
 
   return (
     <StackContext.Provider
@@ -76,6 +91,7 @@ export const StackProvider = ({ children }: StackProviderProps) => {
         finished: true,
         panel,
         panels,
+        setPanelURL,
       }}
     >
       {children}

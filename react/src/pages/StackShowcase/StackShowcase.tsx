@@ -1,6 +1,7 @@
 import { useStack } from "@/contexts/StackContext";
 import PanelShowcase from "./PanelShowcase";
 import StackOverview from "./StackOverview";
+import { useEffect } from "react";
 
 function StackShowcase() {
   const { stack, loading, error, panel } = useStack();
