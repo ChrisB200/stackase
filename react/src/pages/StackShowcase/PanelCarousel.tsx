@@ -9,7 +9,7 @@ import { useStack } from "@/contexts/StackContext";
 import { STORAGE_URL } from "@/config/constants";
 
 export function PanelCarousel() {
-  const { panels, setPanelChange } = useStack();
+  const { panels, setPanelChange, panel } = useStack();
   const [api, setApi] = useState<CarouselApi | undefined>(undefined);
 
   const handleSelect = useCallback(() => {
@@ -25,7 +25,8 @@ export function PanelCarousel() {
     if (!api) return;
 
     // Call it initially so you get the starting slide
-    handleSelect();
+    // handleSelect();
+    api.scrollTo(panel ? panel.position - 1 : 0, true);
 
     api.on("select", handleSelect);
     api.on("reInit", handleSelect);

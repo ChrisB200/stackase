@@ -99,7 +99,7 @@ export const StackProvider = ({ children }: StackProviderProps) => {
       setHasSelectedPanel(false);
       return;
     }
-  }, [searchParams, stack]);
+  }, [panels]);
 
   return (
     <StackContext.Provider
