@@ -1,35 +1,17 @@
-import { getStackWithPanels } from "@/services/stackService";
-import { useQuery } from "@tanstack/react-query";
-import { useParams, useSearchParams } from "react-router-dom";
-import PanelImg from "../Home/PanelImg";
-import { STORAGE_URL } from "@/config/constants";
+import { useStack } from "@/contexts/StackContext";
+import PanelShowcase from "./PanelShowcase";
+import StackOverview from "./StackOverview";
 
 function StackShowcase() {
-  const { username, stackTitle } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const panelId = searchParams.get("panel");
+  const { stack, loading, error, panel } = useStack();
 
-  if (!username || !stackTitle) return <div>404 Not Found</div>;
+  if (loading) return <div>Loading...</div>;
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryFn: () => getStackWithPanels(username, stackTitle),
-    queryKey: ["get", "stack", username, stackTitle],
-  });
+  if (error) return <div>error</div>;
 
-  if (isLoading || !data) return <div>Loading...</div>;
+  if (!stack) return <div>Stack does not exist</div>;
 
-  if (isError) return <div>{error.message}</div>;
-
-  console.log(data);
-
-  return (
-    <div>
-      <h1>{data.title}</h1>
-      {data.panels.map((panel) => (
-        <img src={`${STORAGE_URL}/panels/${panel.id}.png`} />
-      ))}
-    </div>
-  );
+  return <>{!panel ? <StackOverview /> : <PanelShowcase />}</>;
 }
 
 export default StackShowcase;

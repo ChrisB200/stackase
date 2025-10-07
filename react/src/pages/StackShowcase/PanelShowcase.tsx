@@ -1,13 +1,11 @@
-import type { Panel } from "@/types/panel";
+import { useStack } from "@/contexts/StackContext";
 
-interface Props {
-  title: string;
-  panel: Panel;
-  index: number;
-}
+function PanelShowcase() {
+  const { panel } = useStack();
 
-function PanelShowcase({ title, panel, index }: Props) {
-  return <div></div>;
+  if (!panel) return;
+
+  return <div>{panel.id}</div>;
 }
 
 export default PanelShowcase;

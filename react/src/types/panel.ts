@@ -5,6 +5,7 @@ export interface Panel {
   stackId: number;
   origin: number;
   format: string; // change later to be enum
+  position: number;
 }
 
 export interface PanelIncludeStack extends Panel {
