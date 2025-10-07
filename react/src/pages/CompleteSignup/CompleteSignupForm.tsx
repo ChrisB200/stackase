@@ -30,13 +30,13 @@ function CompleteSignupForm({ handleSubmit }: CompleteSignupProps) {
     {
       text: "Submit",
       type: "submit",
-      variant: "default",
+      variant: "accent",
     },
   ];
 
   return (
     <Form
-      variant="card"
+      variant="ghost"
       name="complete-signup"
       title="Profile Details"
       fields={fields}

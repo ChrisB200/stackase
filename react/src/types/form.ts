@@ -23,14 +23,14 @@ export interface Field {
 
 export interface InputField
   extends Field,
-    InputHTMLAttributes<HTMLInputElement> {
+  InputHTMLAttributes<HTMLInputElement> {
   element: "input";
   name: string;
 }
 
 export interface SelectField
   extends Field,
-    SelectHTMLAttributes<HTMLSelectElement> {
+  SelectHTMLAttributes<HTMLSelectElement> {
   element: "select";
   name: string;
   options: SelectOptions[];
@@ -77,8 +77,12 @@ export interface FormCardProps extends FormValues {
   variant: "card";
 }
 
+export interface FormGhostProps extends FormValues {
+  variant: "ghost";
+}
+
 export interface FormDialogProps extends FormValues {
   variant: "dialog";
 }
 
-export type FormProps = FormCardProps | FormDialogProps;
+export type FormProps = FormCardProps | FormDialogProps | FormGhostProps;

@@ -11,9 +11,11 @@ interface StackContextType {
   loading: boolean;
   error?: string | null;
   finished: boolean;
-  panel?: Panel | null;
   panels: Panel[];
+  panel?: Panel | null;
+  hasSelectedPanel: boolean;
   setPanelURL: (panel: Panel) => void;
+  setPanelChange: (index: number) => void;
 }
 
 export const StackContext = createContext<StackContextType | null>(null);
@@ -25,11 +27,18 @@ interface StackProviderProps {
 export const StackProvider = ({ children }: StackProviderProps) => {
   const { username, stackTitle } = useParams();
   const [searchParams, setURLSearchParams] = useSearchParams();
-  const [panel, setPanel] = useState<Panel | null>(null);
   const [panels, setPanels] = useState<Panel[]>([]);
+  const [panel, setPanel] = useState<Panel | null | undefined>(null);
+  const [hasSelectedPanel, setHasSelectedPanel] = useState<boolean>(false);
 
   const setPanelURL = (panel: Panel) => {
     setURLSearchParams({ panel: panel.id.toString() });
+  };
+
+  const setPanelChange = (index: number) => {
+    const p = panels[index];
+    setPanel(p);
+    setPanelURL(p);
   };
 
   // stack has a chance to not exist
@@ -43,6 +52,9 @@ export const StackProvider = ({ children }: StackProviderProps) => {
           panels,
           finished: true,
           setPanelURL,
+          hasSelectedPanel,
+          panel,
+          setPanelChange,
         }}
       >
         {children}
@@ -68,16 +80,23 @@ export const StackProvider = ({ children }: StackProviderProps) => {
 
   useEffect(() => {
     if (!stack) {
-      setPanel(null);
+      setHasSelectedPanel(false);
       return;
     }
 
     const id = searchParams.get("panel");
     // get panel from search params
     if (id) {
-      setPanel(stack.panels.filter((panel) => panel.id === parseInt(id))[0]);
+      const parsedId = parseInt(id);
+      if (parsedId) {
+        setHasSelectedPanel(true);
+        const newPanel = panels.find((p) => p.id === parsedId);
+        setPanel(newPanel);
+      } else {
+        setHasSelectedPanel(false);
+      }
     } else {
-      setPanel(null);
+      setHasSelectedPanel(false);
       return;
     }
   }, [searchParams, stack]);
@@ -89,9 +108,11 @@ export const StackProvider = ({ children }: StackProviderProps) => {
         loading: isLoading,
         error: error?.message,
         finished: true,
-        panel,
         panels,
         setPanelURL,
+        panel,
+        hasSelectedPanel,
+        setPanelChange,
       }}
     >
       {children}

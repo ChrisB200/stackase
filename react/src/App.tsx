@@ -19,7 +19,7 @@ import { StackProvider } from "./contexts/StackContext";
 function App() {
   return (
     <UserProvider>
-      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="ui-theme">
         <FormStoreProvider>
           <Routes>
             <Route path="/signup" element={<Signup />} />

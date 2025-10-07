@@ -29,20 +29,20 @@ function ForgotPasswordForm({ handleSubmit, handleBack }: ForgotProps) {
       {
         text: "Back",
         type: "button",
-        variant: "outline",
+        variant: "secondary",
         onClick: handleBack,
       },
       {
         text: "Send",
         type: "submit",
-        variant: "default",
+        variant: "accent",
       },
     ],
   ];
 
   return (
     <Form
-      variant="card"
+      variant="ghost"
       name="forgot-password"
       title="Forgot Password"
       description="We will send a reset password link to your email"

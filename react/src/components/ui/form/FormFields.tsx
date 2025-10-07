@@ -24,7 +24,9 @@ const FormFields = ({ name, fields }: FormFieldsProps) => {
                   return (
                     <div key={field.name} className="flex-1 grid gap-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor={field.name}>{field.label}</Label>
+                        <Label className="font-bold" htmlFor={field.name}>
+                          {field.label}
+                        </Label>
                         {field.trailingContent && (
                           <div>{field.trailingContent}</div>
                         )}
@@ -52,7 +54,9 @@ const FormFields = ({ name, fields }: FormFieldsProps) => {
           return (
             <div key={item.name} className="grid gap-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor={item.name}>{item.label}</Label>
+                <Label className="font-bold" htmlFor={item.name}>
+                  {item.label}
+                </Label>
                 {item.trailingContent && <div>{item.trailingContent}</div>}
               </div>
               <ChooseElement

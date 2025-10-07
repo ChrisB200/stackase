@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Form from "@/components/ui/form/Form";
 import type { FieldGroup, ButtonGroup } from "@/types/form";
 import signupSchema from "./SignupSchema";
+import GoogleIcon from "@/assets/google.svg?react";
 
 interface SignupFormProps extends React.ComponentProps<"div"> {
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -46,13 +47,13 @@ export function SignupForm({
     {
       text: "Create Account",
       type: "submit",
-      variant: "default",
+      variant: "accent",
     },
   ];
 
   return (
     <Form
-      variant="card"
+      variant="ghost"
       name="signup"
       title="Create an account"
       description="Enter your email below to create an account"
@@ -63,6 +64,7 @@ export function SignupForm({
         text: "Continue with Google",
         onClick: handleGoogle,
         variant: "outline",
+        icon: <GoogleIcon />,
       }}
       showSeparator
       schema={signupSchema}

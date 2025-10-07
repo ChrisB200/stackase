@@ -1,10 +1,9 @@
 import { useStack } from "@/contexts/StackContext";
-import PanelShowcase from "./PanelShowcase";
+import PanelCarousel from "./PanelCarousel";
 import StackOverview from "./StackOverview";
-import { useEffect } from "react";
 
 function StackShowcase() {
-  const { stack, loading, error, panel } = useStack();
+  const { stack, loading, error, hasSelectedPanel } = useStack();
 
   if (loading) return <div>Loading...</div>;
 
@@ -12,7 +11,7 @@ function StackShowcase() {
 
   if (!stack) return <div>Stack does not exist</div>;
 
-  return <>{!panel ? <StackOverview /> : <PanelShowcase />}</>;
+  return <>{!hasSelectedPanel ? <StackOverview /> : <PanelCarousel />}</>;
 }
 
 export default StackShowcase;

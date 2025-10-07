@@ -5,6 +5,7 @@ import type { ZodType } from "zod";
 import useForm from "@/hooks/useForm";
 import FormFields from "./FormFields";
 import FormButtons from "./FormButtons";
+import { cn } from "@/lib/utils";
 
 interface FormContentProps {
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -31,7 +32,7 @@ function FormContent({
 
   const handleInnerSubmit = (
     e: FormEvent<HTMLFormElement>,
-    submitFn: (e: FormEvent<HTMLFormElement>) => void
+    submitFn: (e: FormEvent<HTMLFormElement>) => void,
   ) => {
     e.preventDefault();
     const isValid = schema ? validate(schema) : true;
@@ -53,7 +54,10 @@ function FormContent({
                 variant={secondaryButton.variant || "outline"}
                 onClick={secondaryButton.onClick}
                 disabled={secondaryButton.disabled}
-                className="w-full flex items-center justify-center gap-2"
+                className={cn(
+                  "w-full flex items-center justify-center gap-2",
+                  secondaryButton.className,
+                )}
               >
                 {secondaryButton.icon}
                 {secondaryButton.text}
@@ -63,7 +67,7 @@ function FormContent({
                   <div className="border-t border-gray-300 dark:border-gray-600" />
                   <span
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
-  bg-white dark:bg-card px-2 text-gray-500 dark:text-gray-400 text-sm select-none"
+  bg-background dark:bg-card px-2 text-border text-sm select-none"
                   >
                     OR
                   </span>

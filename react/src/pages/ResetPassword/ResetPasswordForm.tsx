@@ -27,21 +27,21 @@ function ResetPasswordForm({ handleSubmit }: FormProps) {
       {
         type: "button",
         text: "Back",
-        variant: "outline",
+        variant: "secondary",
       },
       {
         type: "submit",
         text: "Reset",
+        variant: "accent",
       },
     ],
   ];
 
   return (
     <Form
-      variant="card"
+      variant="ghost"
       name="reset-password"
       title="Reset password"
-      description="Reset your password"
       fields={fields}
       buttons={buttons}
       handleSubmit={handleSubmit}

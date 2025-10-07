@@ -27,19 +27,19 @@ function VerifyForm({ handleSubmit, handleBack }: VerifyFormProps) {
         text: "Back",
         type: "button",
         onClick: handleBack,
-        variant: "outline",
+        variant: "secondary",
       },
       {
         text: "Submit",
         type: "submit",
-        variant: "default",
+        variant: "accent",
       },
     ],
   ];
 
   return (
     <Form
-      variant="card"
+      variant="ghost"
       name="verify"
       title="Verify Account"
       description="A 6 digit code has been sent to your email"

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Form from "@/components/ui/form/Form";
 import loginSchema from "./LoginSchema";
 import type { FieldGroup, ButtonGroup } from "@/types/form";
+import GoogleIcon from "@/assets/google.svg?react";
 
 interface LoginProps extends React.ComponentProps<"div"> {
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -45,13 +46,13 @@ export function LoginForm({
     {
       text: "Log In",
       type: "submit",
-      variant: "default",
+      variant: "accent",
     },
   ];
 
   return (
     <Form
-      variant="card"
+      variant="ghost"
       name="login"
       title="Login to your account"
       description="Enter your email below to login to your account"
@@ -63,6 +64,7 @@ export function LoginForm({
         text: "Continue with Google",
         onClick: handleGoogle,
         variant: "outline",
+        icon: <GoogleIcon />,
       }}
       showSeparator
       bottomText={

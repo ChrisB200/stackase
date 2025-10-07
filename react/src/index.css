@@ -42,21 +42,21 @@
 }
 
 :root {
-  --radius: 0.25rem;
-  --background: #d9d9ce;
-  --foreground: #0a0900;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --radius: 0.3rem;
+  --background: #f9f7f3;
+  --foreground: #2d2d2d;
+  --card: #f9f7f3;
+  --card-foreground: #2d2d2d;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --primary: #f8efdd;
+  --primary-foreground: #2d2d2d;
+  --secondary: #2d2d2d;
+  --secondary-foreground: #f9f7f3;
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: #9f1b2c;
+  --accent-foreground: #f9f7f3;
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -77,8 +77,8 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: #161616;
+  --foreground: #f0ebdf;
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -89,8 +89,8 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: #9f1b2c;
+  --accent-foreground: #f0ebdf;
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
@@ -117,5 +117,13 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Rubik";
+  }
+}
+
+@layer components {
+  .text-comic {
+    font-family: "Bangers";
+    letter-spacing: 0.05em;
   }
 }
