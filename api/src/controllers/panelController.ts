@@ -25,9 +25,16 @@ const createPanel: RequestHandler = async (req, res) => {
   if (!media)
     throw new AppError("No media was provided", 400, "MISSING_FIELDS");
 
+  const maxResult = await db
+    .selectFrom("panels")
+    .select(({ fn }) => fn.max("position").as("maxPosition"))
+    .executeTakeFirst();
+
+  const position = (maxResult?.maxPosition ?? 0) + 1;
+
   const panel = await db
     .insertInto("panels")
-    .values({ caption, stackId, origin, media, format })
+    .values({ caption, stackId, origin, media, format, position })
     .returningAll()
     .executeTakeFirstOrThrow();
 

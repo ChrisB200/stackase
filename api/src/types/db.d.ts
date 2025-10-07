@@ -366,6 +366,7 @@ export interface Panels {
   id: Generated<number>;
   media: string;
   origin: string;
+  position: number;
   stackId: number;
 }
 

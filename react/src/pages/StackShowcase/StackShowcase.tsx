@@ -1,11 +1,14 @@
 import { getStackWithPanels } from "@/services/stackService";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import PanelImg from "../Home/PanelImg";
 import { STORAGE_URL } from "@/config/constants";
 
 function StackShowcase() {
   const { username, stackTitle } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const panelId = searchParams.get("panel");
+
   if (!username || !stackTitle) return <div>404 Not Found</div>;
 
   const { data, isLoading, isError, error } = useQuery({
