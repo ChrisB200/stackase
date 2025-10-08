@@ -3,10 +3,13 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { useStack } from "@/contexts/StackContext";
 import { STORAGE_URL } from "@/config/constants";
+import PanelCard from "./PanelCard";
 
 export function PanelCarousel() {
   const { panels, setPanelChange, panel } = useStack();
@@ -16,16 +19,12 @@ export function PanelCarousel() {
     if (!api) return;
     const idx = api.selectedScrollSnap();
     setPanelChange(idx);
-    // ← Your “slide changed” logic goes here.
     console.log("Slide changed to:", idx);
-    // e.g. set some internal state, trigger effects, etc.
   }, [api]);
 
   useEffect(() => {
     if (!api) return;
 
-    // Call it initially so you get the starting slide
-    // handleSelect();
     api.scrollTo(panel ? panel.position - 1 : 0, true);
 
     api.on("select", handleSelect);
@@ -38,18 +37,23 @@ export function PanelCarousel() {
   }, [api, handleSelect]);
 
   return (
-    <Carousel setApi={setApi} opts={{ loop: true }}>
-      <CarouselContent>
-        {panels.map((panel, idx) => (
-          <CarouselItem key={panel.id}>
-            <img
-              src={`${STORAGE_URL}/panels/${panel.id}.png`}
-              alt={`Panel ${idx}`}
-            />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+    <div className="relative flex justify-center w-[80vw]">
+      <Carousel
+        className="w-fit"
+        setApi={setApi}
+        opts={{ loop: true, align: "center" }}
+      >
+        <CarouselContent>
+          {panels.map((panel) => (
+            <CarouselItem className="flex justify-center items-center">
+              <PanelCard panel={panel} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="z-20 absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8" />
+        <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8" />
+      </Carousel>
+    </div>
   );
 }
 

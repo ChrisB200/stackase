@@ -3,7 +3,7 @@ import type { Panel } from "@/types/panel";
 import type { StackWithPanels } from "@/types/stack";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
 interface StackContextType {
@@ -16,6 +16,7 @@ interface StackContextType {
   hasSelectedPanel: boolean;
   setPanelURL: (panel: Panel) => void;
   setPanelChange: (index: number) => void;
+  setCanChange: Dispatch<SetStateAction<boolean>>;
 }
 
 export const StackContext = createContext<StackContextType | null>(null);
@@ -30,6 +31,7 @@ export const StackProvider = ({ children }: StackProviderProps) => {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [panel, setPanel] = useState<Panel | null | undefined>(null);
   const [hasSelectedPanel, setHasSelectedPanel] = useState<boolean>(false);
+  const [canChange, setCanChange] = useState<boolean>(true);
 
   const setPanelURL = (panel: Panel) => {
     setURLSearchParams({ panel: panel.id.toString() });
@@ -37,6 +39,9 @@ export const StackProvider = ({ children }: StackProviderProps) => {
 
   const setPanelChange = (index: number) => {
     const p = panels[index];
+    if (!p) return;
+    if (!canChange) return;
+
     setPanel(p);
     setPanelURL(p);
   };
@@ -54,6 +59,7 @@ export const StackProvider = ({ children }: StackProviderProps) => {
           setPanelURL,
           hasSelectedPanel,
           panel,
+          setCanChange,
           setPanelChange,
         }}
       >
@@ -113,6 +119,7 @@ export const StackProvider = ({ children }: StackProviderProps) => {
         panel,
         hasSelectedPanel,
         setPanelChange,
+        setCanChange,
       }}
     >
       {children}

@@ -9,6 +9,7 @@ function StackOverview() {
 
   const handleClick = (panel: Panel) => {
     setPanelURL(panel);
+    window.location.reload();
   };
 
   return (
