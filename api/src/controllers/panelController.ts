@@ -30,7 +30,7 @@ const createPanel: RequestHandler = async (req, res) => {
     .select(({ fn }) => fn.max("position").as("maxPosition"))
     .executeTakeFirst();
 
-  const position = (maxResult?.maxPosition ?? 0) + 1;
+  const position = (maxResult?.maxPosition ?? -1) + 1;
 
   const panel = await db
     .insertInto("panels")

@@ -3,8 +3,7 @@ import type { Panel } from "@/types/panel";
 import type { StackWithPanels } from "@/types/stack";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { Dispatch, ReactNode, SetStateAction } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import type { ReactNode } from "react";
 
 interface StackContextType {
   stack?: StackWithPanels | null;
@@ -12,60 +11,22 @@ interface StackContextType {
   error?: string | null;
   finished: boolean;
   panels: Panel[];
-  panel?: Panel | null;
-  hasSelectedPanel: boolean;
-  setPanelURL: (panel: Panel) => void;
-  setPanelChange: (index: number) => void;
-  setCanChange: Dispatch<SetStateAction<boolean>>;
 }
 
 export const StackContext = createContext<StackContextType | null>(null);
 
 interface StackProviderProps {
   children: ReactNode;
+  username: string;
+  stackTitle: string;
 }
 
-export const StackProvider = ({ children }: StackProviderProps) => {
-  const { username, stackTitle } = useParams();
-  const [searchParams, setURLSearchParams] = useSearchParams();
+export const StackProvider = ({
+  username,
+  stackTitle,
+  children,
+}: StackProviderProps) => {
   const [panels, setPanels] = useState<Panel[]>([]);
-  const [panel, setPanel] = useState<Panel | null | undefined>(null);
-  const [hasSelectedPanel, setHasSelectedPanel] = useState<boolean>(false);
-  const [canChange, setCanChange] = useState<boolean>(true);
-
-  const setPanelURL = (panel: Panel) => {
-    setURLSearchParams({ panel: panel.id.toString() });
-  };
-
-  const setPanelChange = (index: number) => {
-    const p = panels[index];
-    if (!p) return;
-    if (!canChange) return;
-
-    setPanel(p);
-    setPanelURL(p);
-  };
-
-  // stack has a chance to not exist
-  if (!username || !stackTitle)
-    return (
-      <StackContext.Provider
-        value={{
-          stack: null,
-          loading: false,
-          error: "username and stack title not present",
-          panels,
-          finished: true,
-          setPanelURL,
-          hasSelectedPanel,
-          panel,
-          setCanChange,
-          setPanelChange,
-        }}
-      >
-        {children}
-      </StackContext.Provider>
-    );
 
   // request stack and panels
   const {
@@ -84,29 +45,6 @@ export const StackProvider = ({ children }: StackProviderProps) => {
     setPanels(stack.panels.sort((a, b) => a.position - b.position));
   }, [stack]);
 
-  useEffect(() => {
-    if (!stack) {
-      setHasSelectedPanel(false);
-      return;
-    }
-
-    const id = searchParams.get("panel");
-    // get panel from search params
-    if (id) {
-      const parsedId = parseInt(id);
-      if (parsedId) {
-        setHasSelectedPanel(true);
-        const newPanel = panels.find((p) => p.id === parsedId);
-        setPanel(newPanel);
-      } else {
-        setHasSelectedPanel(false);
-      }
-    } else {
-      setHasSelectedPanel(false);
-      return;
-    }
-  }, [panels]);
-
   return (
     <StackContext.Provider
       value={{
@@ -115,11 +53,6 @@ export const StackProvider = ({ children }: StackProviderProps) => {
         error: error?.message,
         finished: true,
         panels,
-        setPanelURL,
-        panel,
-        hasSelectedPanel,
-        setPanelChange,
-        setCanChange,
       }}
     >
       {children}

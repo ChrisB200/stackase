@@ -6,8 +6,15 @@ from supabase import create_client
 
 from .constants import DB_URL, SUPABASE_API_URL, SUPABASE_SERVICE_KEY
 
-supabase = create_client(SUPABASE_API_URL, SUPABASE_SERVICE_KEY)
-vx = vecs.create_client(DB_URL)
+
+def get_supabase_client():
+    supabase = create_client(SUPABASE_API_URL, SUPABASE_SERVICE_KEY)
+    return supabase
+
+
+def get_vecs_client():
+    vx = vecs.create_client(DB_URL)
+    return vx
 
 
 def get_file_name(key: str):
@@ -18,6 +25,7 @@ def get_file_name(key: str):
 
 # TODO: Need to add error checking
 def download_image(bucket: str, key: str):
+    supabase = get_supabase_client()
     response = supabase.storage.from_("panels").download(key)
     img = Image.open(BytesIO(response)).convert("RGB")
     return img

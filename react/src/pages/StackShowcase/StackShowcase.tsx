@@ -1,17 +1,17 @@
-import { useStack } from "@/contexts/StackContext";
+import { StackProvider } from "@/contexts/StackContext";
 import StackOverview from "./StackOverview";
-import PanelShowcase from "./PanelShowcase";
+import { useParams } from "react-router-dom";
 
 function StackShowcase() {
-  const { stack, loading, error, hasSelectedPanel } = useStack();
+  const { username, stackTitle } = useParams();
 
-  if (loading) return <div>Loading...</div>;
+  if (!username || !stackTitle) return <div>404</div>;
 
-  if (error) return <div>error</div>;
-
-  if (!stack) return <div>Stack does not exist</div>;
-
-  return <>{!hasSelectedPanel ? <StackOverview /> : <PanelShowcase />}</>;
+  return (
+    <StackProvider username={username} stackTitle={stackTitle}>
+      <StackOverview />
+    </StackProvider>
+  );
 }
 
 export default StackShowcase;

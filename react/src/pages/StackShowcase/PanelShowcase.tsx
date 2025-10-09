@@ -1,10 +1,10 @@
-import { useStack } from "@/contexts/StackContext";
 import PanelCarousel from "./PanelCarousel";
 import { motion, AnimatePresence } from "motion/react";
+import usePanelSelection from "@/hooks/usePanelSelection";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function PanelShowcase() {
-  const { panel } = useStack();
-  if (!panel) return null;
+  const { selectedPanel } = usePanelSelection();
 
   return (
     // let the page grow if the caption goes below the fold
@@ -16,15 +16,20 @@ function PanelShowcase() {
         {/* docked 20px under the carousel, horizontally centered */}
 
         <AnimatePresence mode="wait">
-          <motion.p
-            key={panel.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute left-1/2 -translate-x-1/2 top-full mt-[20px] text-center"
-          >
-            {panel.caption}
-          </motion.p>
+          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-[20px] text-center">
+            {selectedPanel ? (
+              <motion.p
+                key={selectedPanel.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                {selectedPanel.caption}
+              </motion.p>
+            ) : (
+              <Skeleton className="w-[200px] h-[20px]" />
+            )}
+          </div>
         </AnimatePresence>
       </div>
     </div>

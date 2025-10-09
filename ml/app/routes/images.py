@@ -2,7 +2,7 @@ from celery import chain
 from flask import Blueprint, jsonify, request
 from PIL import Image
 
-from ..config.supabase import vx
+from ..config.supabase import get_vecs_client
 from ..tasks import compress_image, generate_embedding, model, upload_panel_img
 from ..utils.exceptions import AppError
 from ..utils.security import authenticated
@@ -33,6 +33,7 @@ def upload_image():
 @images_bp.get("/search")
 @authenticated
 def search():
+    vx = get_vecs_client()
     file = request.files.get("image")
 
     images = vx.get_or_create_collection(name="panels", dimension=512)

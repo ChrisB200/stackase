@@ -7,25 +7,24 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { useStack } from "@/contexts/StackContext";
-import { STORAGE_URL } from "@/config/constants";
 import PanelCard from "./PanelCard";
+import usePanelSelection from "@/hooks/usePanelSelection";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function PanelCarousel() {
-  const { panels, setPanelChange, panel } = useStack();
+  const { panels, setPanelByPosition, selectedPanel } = usePanelSelection();
   const [api, setApi] = useState<CarouselApi | undefined>(undefined);
 
   const handleSelect = useCallback(() => {
     if (!api) return;
     const idx = api.selectedScrollSnap();
-    setPanelChange(idx);
-    console.log("Slide changed to:", idx);
+    setPanelByPosition(idx);
   }, [api]);
 
   useEffect(() => {
     if (!api) return;
 
-    api.scrollTo(panel ? panel.position - 1 : 0, true);
+    api.scrollTo(selectedPanel ? selectedPanel.position : 0, true);
 
     api.on("select", handleSelect);
     api.on("reInit", handleSelect);
@@ -37,18 +36,27 @@ export function PanelCarousel() {
   }, [api, handleSelect]);
 
   return (
-    <div className="relative flex justify-center w-[80vw]">
+    <div className="relative flex justify-center w-[80vw] min-h-[60vh]">
       <Carousel
-        className="w-fit"
+        className="w-full"
         setApi={setApi}
         opts={{ loop: true, align: "center" }}
       >
         <CarouselContent>
-          {panels.map((panel) => (
-            <CarouselItem className="flex justify-center items-center">
-              <PanelCard panel={panel} />
+          {panels && panels.length > 0 ? (
+            panels.map((panel) => (
+              <CarouselItem
+                className="flex justify-center items-center"
+                key={panel.id}
+              >
+                <PanelCard panel={panel} />
+              </CarouselItem>
+            ))
+          ) : (
+            <CarouselItem className="relative max-w-[75vw] max-h-[60vh]">
+              <Skeleton className="absolute inset-0 w-full h-full rounded-md" />
             </CarouselItem>
-          ))}
+          )}
         </CarouselContent>
         <CarouselPrevious className="z-20 absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8" />
         <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8" />
