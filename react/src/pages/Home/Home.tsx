@@ -21,7 +21,7 @@ function Home() {
   if (isError || !data) return <div>error</div>;
 
   const handleClick = (panel: PanelIncludeStack) => {
-    navigate(createStackURL(panel.username, panel.title));
+    navigate(createStackURL(panel.username, panel.title, panel.id));
   };
 
   return (

@@ -47,10 +47,10 @@ export function makeURL({
   return url;
 }
 
-export function createStackURL(username: string, title: string) {
+export function createStackURL(username: string, title: string, id: number) {
   const dashed = title.replace(/\s+/g, "-").toLowerCase();
   console.log(dashed);
-  return `${username}/${dashed}`.toLowerCase();
+  return `${username}/${dashed}?panel=${id}`.toLowerCase();
 }
 
 export function decodeStackURL(dashedTitle: string) {
