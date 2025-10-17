@@ -2,37 +2,58 @@ import PanelCarousel from "./PanelCarousel";
 import { motion, AnimatePresence } from "motion/react";
 import usePanelSelection from "@/hooks/usePanelSelection";
 import { Skeleton } from "@/components/ui/skeleton";
+import InteractionButton from "@/components/InteractionButton";
+import {
+  ArrowLeft,
+  Ellipsis,
+  Heart,
+  MoveLeft,
+  Search,
+  Share,
+} from "lucide-react";
 
 function PanelShowcase() {
-  const { selectedPanel } = usePanelSelection();
+  const { selectedPanel, removeSelectedPanel } = usePanelSelection();
 
   return (
     // let the page grow if the caption goes below the fold
-    <div className="min-h-screen grid place-items-center">
-      {/* this box is what we center; caption is positioned relative to it */}
-      <div className="relative">
-        <PanelCarousel />
+    <>
+      <InteractionButton
+        onClick={removeSelectedPanel}
+        className="absolute top-4 left-4"
+        Icon={MoveLeft}
+      />
+      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">
+        <div className="relative">
+          <PanelCarousel />
 
-        {/* docked 20px under the carousel, horizontally centered */}
+          {/* docked 20px under the carousel, horizontally centered */}
 
-        <AnimatePresence mode="wait">
-          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-[20px] text-center">
-            {selectedPanel ? (
-              <motion.p
-                key={selectedPanel.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
-                {selectedPanel.caption}
-              </motion.p>
-            ) : (
-              <Skeleton className="w-[200px] h-[20px]" />
-            )}
+          <div className="flex flex-col gap-8 absolute left-1/2 -translate-x-1/2 top-full mt-[32px] text-center">
+            <AnimatePresence mode="wait">
+              {selectedPanel ? (
+                <motion.p
+                  key={selectedPanel.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  {selectedPanel.caption}
+                </motion.p>
+              ) : (
+                <Skeleton className="w-[200px] h-[20px]" />
+              )}
+            </AnimatePresence>
+            <div className="flex gap-6">
+              <InteractionButton Icon={Heart} />
+              <InteractionButton Icon={Share} />
+              <InteractionButton Icon={Search} />
+              <InteractionButton Icon={Ellipsis} />
+            </div>
           </div>
-        </AnimatePresence>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

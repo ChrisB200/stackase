@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STORAGE_URL } from "@/config/constants";
@@ -11,8 +11,6 @@ interface Props {
 function PanelCard({ panel }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-
-  const imageSrc = `${STORAGE_URL}/panels/${panel.id}.png`;
 
   return (
     <div
@@ -28,7 +26,7 @@ function PanelCard({ panel }: Props) {
 
       {/* Actual image */}
       <img
-        src={imageSrc}
+        src={`${STORAGE_URL}/panels/${panel.id}.png`}
         alt={panel.caption}
         onLoad={() => setLoaded(true)}
         onError={() => {
@@ -39,7 +37,7 @@ function PanelCard({ panel }: Props) {
           "object-contain w-full h-full transition-opacity duration-500",
           loaded && !error ? "opacity-100" : "opacity-0",
         )}
-        loading="lazy"
+        loading="eager"
         draggable={false}
       />
 

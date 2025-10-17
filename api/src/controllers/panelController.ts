@@ -71,26 +71,14 @@ const createPanel: RequestHandler = async (req, res) => {
 };
 
 const getPanels: RequestHandler = async (req, res) => {
-  const { include } = req.query;
-
-  const options = {
-    include: include ? include : null,
-  };
-
-  let query = db
+  const panels = await db
     .selectFrom("panels")
     .selectAll()
-    .orderBy(sql`random()`);
-
-  console.log(options);
-  if (options.include === "stacks") {
-    query = query
-      .leftJoin("stacks", "panels.stackId", "stacks.id")
-      .leftJoin("users", "stacks.userId", "users.id")
-      .select(["username", "panels.id as id", "stacks.title as title", "name"]);
-  }
-
-  const panels = await query.execute();
+    .leftJoin("stacks", "panels.stackId", "stacks.id")
+    .leftJoin("users", "stacks.userId", "users.id")
+    .select(["username", "panels.id as id", "stacks.title as title", "name"])
+    .orderBy(sql`random()`)
+    .execute();
 
   res.status(200).json(panels);
 };

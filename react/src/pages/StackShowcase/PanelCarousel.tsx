@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -14,9 +14,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function PanelCarousel() {
   const { panels, setPanelByPosition, selectedPanel } = usePanelSelection();
   const [api, setApi] = useState<CarouselApi | undefined>(undefined);
+  const internalChange = useRef(false);
 
   const handleSelect = useCallback(() => {
     if (!api) return;
+    internalChange.current = true;
     const idx = api.selectedScrollSnap();
     setPanelByPosition(idx);
   }, [api]);
@@ -24,7 +26,15 @@ export function PanelCarousel() {
   useEffect(() => {
     if (!api) return;
 
-    api.scrollTo(selectedPanel ? selectedPanel.position : 0, true);
+    const scrollToSelected = () => {
+      // 👇 only scroll if change came from outside (e.g., Back button)
+      if (!internalChange.current) {
+        api.scrollTo(selectedPanel ? selectedPanel.position : 0, true);
+      }
+      internalChange.current = false; // reset after handling
+    };
+
+    scrollToSelected();
 
     api.on("select", handleSelect);
     api.on("reInit", handleSelect);
@@ -33,7 +43,7 @@ export function PanelCarousel() {
       api.off("select", handleSelect);
       api.off("reInit", handleSelect);
     };
-  }, [api, handleSelect]);
+  }, [api, handleSelect, selectedPanel]);
 
   return (
     <div className="relative flex justify-center w-[80vw] min-h-[60vh]">

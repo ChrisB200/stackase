@@ -1,24 +1,26 @@
 import { STORAGE_URL } from "@/config/constants";
+import { cn } from "@/lib/utils";
 import type { PanelIncludeStack } from "@/types/panel";
 import { createStackURL } from "@/utils/url";
+import type { HTMLAttributes } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   panel: PanelIncludeStack;
 }
 
-function PanelImg({ panel }: Props) {
+function PanelImg({ panel, className, ...rest }: Props) {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate(createStackURL(panel.username, panel.title));
-  };
-
   return (
-    <div className="w-full mb-6 hover:cursor-pointer" onClick={handleClick}>
+    <div
+      className={cn("w-full mb-6 hover:cursor-pointer", className)}
+      {...rest}
+    >
       <img
         className="w-full rounded-xl"
         src={`${STORAGE_URL}/panels/${panel.id}.png`}
+        {...rest}
       />
     </div>
   );

@@ -1,11 +1,12 @@
 import { STORAGE_URL } from "@/config/constants";
-import { useStack } from "@/contexts/StackContext";
 import usePanelSelection from "@/hooks/usePanelSelection";
 import type { Panel } from "@/types/panel";
 import PanelShowcase from "./PanelShowcase";
+import PanelElement from "@/components/PanelElement";
+import PanelMasonry from "@/components/PanelMasonry";
 
 function StackOverview() {
-  const { stack, loading, error, setSelectedPanelId, selectedPanelId } =
+  const { stack, panels, loading, error, setPanelQueryParam, selectedPanelId } =
     usePanelSelection();
 
   // add a loading spinner
@@ -16,21 +17,19 @@ function StackOverview() {
   if (!stack) return error;
 
   const handleClick = (panel: Panel) => {
-    setSelectedPanelId(panel.id);
+    setPanelQueryParam(panel.id);
   };
 
-  return selectedPanelId ? (
-    <PanelShowcase />
-  ) : (
-    <div>
-      <h1>{stack.title}</h1>
-      {stack.panels.map((panel) => (
-        <img
-          key={panel.id}
-          src={`${STORAGE_URL}/panels/${panel.id}.png`}
-          onClick={() => handleClick(panel)}
-        />
-      ))}
+  return (
+    <div className="px-6">
+      <h1 className="text-center text-comic text-5xl mt-15 mb-15">
+        {stack.title.toUpperCase()}
+      </h1>
+      {selectedPanelId ? (
+        <PanelShowcase />
+      ) : (
+        <PanelMasonry panels={panels} onPanelClick={handleClick} />
+      )}
     </div>
   );
 }

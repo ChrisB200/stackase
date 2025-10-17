@@ -15,6 +15,12 @@ function usePanelSelection() {
     img.src = `${STORAGE_URL}/panels/${panel.id}.png`;
   };
 
+  const removeSelectedPanel = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("panel");
+    setURLSearchParams(newParams);
+  };
+
   const preloadSurroundingPanels = () => {
     if (!selectedPanel) return;
 
@@ -67,13 +73,17 @@ function usePanelSelection() {
   // setting the panel from query params
   useEffect(() => {
     const id = getPanelIdFromQueryParam();
-    if (!id) return;
+
+    if (!id) {
+      setSelectedPanelId(null);
+      return;
+    }
 
     // deduplicates
     if (id === selectedPanelId) return;
 
     setSelectedPanelId(id);
-  }, [stack]);
+  }, [stack, searchParams]);
 
   // synchronising selectedPanel and selectedPanelId
   useEffect(() => {
@@ -112,6 +122,7 @@ function usePanelSelection() {
     getNextPanelPosition,
     getPrevPanelPosition,
     setPanelByPosition,
+    removeSelectedPanel,
   };
 }
 

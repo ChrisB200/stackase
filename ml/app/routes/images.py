@@ -31,7 +31,6 @@ def upload_image():
 
 
 @images_bp.get("/search")
-@authenticated
 def search():
     vx = get_vecs_client()
     file = request.files.get("image")
