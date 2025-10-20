@@ -2,7 +2,7 @@ from celery import chain
 from flask import Blueprint, jsonify, request
 from PIL import Image
 
-from ..config.supabase import get_vecs_client
+from ..config.supabase import download_image, get_vecs_client
 from ..tasks import compress_image, generate_embedding, model, upload_panel_img
 from ..utils.exceptions import AppError
 from ..utils.security import authenticated
@@ -44,3 +44,18 @@ def search():
     urls = [f"{result}.png" for result in results]
 
     return jsonify(urls), 200
+
+
+@images_bp.get("/search/id")
+def search_id():
+    vx = get_vecs_client()
+    id = request.json.get("id")
+
+    response = download_image("panels", f"{id}.png")
+
+    images = vx.get_or_create_collection(name="panels", dimension=512)
+
+    emb = model.encode(response)
+
+    results = images.query(data=emb)
+    return jsonify(results), 200

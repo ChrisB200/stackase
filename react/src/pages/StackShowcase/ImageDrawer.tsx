@@ -1,3 +1,4 @@
+import { getSimilarPanelsReq } from "@/api/panelsRequests";
 import InteractionButton from "@/components/InteractionButton";
 import PanelMasonry from "@/components/PanelMasonry";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -7,11 +8,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import usePanelSelection from "@/hooks/usePanelSelection";
+import { getSimilarPanels } from "@/services/panelsService";
+import type { PanelIncludeStack } from "@/types/panel";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-function ImageDrawer() {
-  const { panels } = usePanelSelection();
+function ImageDrawer({ id }: { id?: string }) {
+  const [panels, setPanels] = useState<PanelIncludeStack[] | null>(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const panels = await getSimilarPanels(id);
+      setPanels(panels);
+    };
+    fetch();
+  }, [id]);
 
   return (
     <Drawer direction="bottom">
@@ -24,7 +36,7 @@ function ImageDrawer() {
         <TooltipContent>Find Similar</TooltipContent>
       </Tooltip>
       <DrawerContent>
-        <PanelMasonry panels={panels} />
+        {panels ? <PanelMasonry panels={panels} /> : ""}
       </DrawerContent>
     </Drawer>
   );

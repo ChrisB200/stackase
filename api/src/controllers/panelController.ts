@@ -83,4 +83,27 @@ const getPanels: RequestHandler = async (req, res) => {
   res.status(200).json(panels);
 };
 
-export { createPanel, getPanels };
+const findSimilarPanels: RequestHandler = async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+
+  const { data } = await requestML({
+    method: "get",
+    url: "/images/search/id",
+    data: { id },
+  });
+
+  const panels = await db
+    .selectFrom("panels")
+    .selectAll()
+    .leftJoin("stacks", "panels.stackId", "stacks.id")
+    .leftJoin("users", "stacks.userId", "users.id")
+    .select(["username", "panels.id as id", "stacks.title as title", "name"])
+    .where("panels.id", "in", data)
+    .orderBy(sql`array_position(array[${sql.join(data)}]::int[], panels.id)`)
+    .execute();
+
+  res.status(200).json(panels);
+};
+
+export { createPanel, getPanels, findSimilarPanels };

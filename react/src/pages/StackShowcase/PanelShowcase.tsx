@@ -44,7 +44,7 @@ function PanelShowcase() {
             <div className="flex gap-6">
               <LikeButton />
               <ShareButton />
-              <ImageDrawer />
+              <ImageDrawer id={selectedPanel?.id || undefined} />
               <MoreDropdown />
             </div>
           </div>
