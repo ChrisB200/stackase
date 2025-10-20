@@ -11,6 +11,7 @@ import {
   Search,
   Share,
 } from "lucide-react";
+import ImageDrawer from "./ImageDrawer";
 
 function PanelShowcase() {
   const { selectedPanel, removeSelectedPanel } = usePanelSelection();
@@ -47,7 +48,9 @@ function PanelShowcase() {
             <div className="flex gap-6">
               <InteractionButton Icon={Heart} />
               <InteractionButton Icon={Share} />
-              <InteractionButton Icon={Search} />
+              <ImageDrawer>
+                <InteractionButton Icon={Search} />
+              </ImageDrawer>
               <InteractionButton Icon={Ellipsis} />
             </div>
           </div>

@@ -9,6 +9,7 @@ function usePanelSelection() {
   const [selectedPanelId, setSelectedPanelId] = useState<number | null>(null);
   const [selectedPanel, setSelectedPanel] = useState<Panel | null>(null);
   const { stack, panels, loading, error } = useStack();
+  const [hasSelectedPanel, setHasSelectedPanel] = useState<boolean>(false);
 
   const preloadPanel = (panel: Panel) => {
     const img = new Image();
@@ -19,6 +20,7 @@ function usePanelSelection() {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete("panel");
     setURLSearchParams(newParams);
+    setHasSelectedPanel(false);
   };
 
   const preloadSurroundingPanels = () => {
@@ -75,7 +77,7 @@ function usePanelSelection() {
     const id = getPanelIdFromQueryParam();
 
     if (!id) {
-      setSelectedPanelId(null);
+      setHasSelectedPanel(false);
       return;
     }
 
@@ -83,6 +85,7 @@ function usePanelSelection() {
     if (id === selectedPanelId) return;
 
     setSelectedPanelId(id);
+    setHasSelectedPanel(true);
   }, [stack, searchParams]);
 
   // synchronising selectedPanel and selectedPanelId
@@ -96,11 +99,16 @@ function usePanelSelection() {
     if (!selectedPanelId) return;
 
     const oldId = getPanelIdFromQueryParam();
-    if (!oldId) return setPanelQueryParam(selectedPanelId);
+    if (!oldId) {
+      setHasSelectedPanel(true);
+      setPanelQueryParam(selectedPanelId);
+      return;
+    }
 
     if (oldId === selectedPanelId) return;
 
     setPanelQueryParam(selectedPanelId);
+    setHasSelectedPanel(true);
   }, [selectedPanelId]);
 
   // images are already loaded before seen
@@ -123,6 +131,7 @@ function usePanelSelection() {
     getPrevPanelPosition,
     setPanelByPosition,
     removeSelectedPanel,
+    hasSelectedPanel,
   };
 }
 

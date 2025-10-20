@@ -6,8 +6,14 @@ import PanelElement from "@/components/PanelElement";
 import PanelMasonry from "@/components/PanelMasonry";
 
 function StackOverview() {
-  const { stack, panels, loading, error, setPanelQueryParam, selectedPanelId } =
-    usePanelSelection();
+  const {
+    stack,
+    panels,
+    loading,
+    error,
+    setPanelQueryParam,
+    hasSelectedPanel,
+  } = usePanelSelection();
 
   // add a loading spinner
   if (loading) return <div>Loading...</div>;
@@ -25,7 +31,7 @@ function StackOverview() {
       <h1 className="text-center text-comic text-5xl mt-15 mb-15">
         {stack.title.toUpperCase()}
       </h1>
-      {selectedPanelId ? (
+      {hasSelectedPanel ? (
         <PanelShowcase />
       ) : (
         <PanelMasonry panels={panels} onPanelClick={handleClick} />
