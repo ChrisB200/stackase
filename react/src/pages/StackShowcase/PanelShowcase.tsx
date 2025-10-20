@@ -3,15 +3,11 @@ import { motion, AnimatePresence } from "motion/react";
 import usePanelSelection from "@/hooks/usePanelSelection";
 import { Skeleton } from "@/components/ui/skeleton";
 import InteractionButton from "@/components/InteractionButton";
-import {
-  ArrowLeft,
-  Ellipsis,
-  Heart,
-  MoveLeft,
-  Search,
-  Share,
-} from "lucide-react";
+import { MoveLeft } from "lucide-react";
 import ImageDrawer from "./ImageDrawer";
+import MoreDropdown from "./MoreDropdown";
+import ShareButton from "./ShareButton";
+import LikeButton from "./LikeButton";
 
 function PanelShowcase() {
   const { selectedPanel, removeSelectedPanel } = usePanelSelection();
@@ -24,7 +20,7 @@ function PanelShowcase() {
         className="absolute top-4 left-4"
         Icon={MoveLeft}
       />
-      <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">
+      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">
         <div className="relative">
           <PanelCarousel />
 
@@ -46,12 +42,10 @@ function PanelShowcase() {
               )}
             </AnimatePresence>
             <div className="flex gap-6">
-              <InteractionButton Icon={Heart} />
-              <InteractionButton Icon={Share} />
-              <ImageDrawer>
-                <InteractionButton Icon={Search} />
-              </ImageDrawer>
-              <InteractionButton Icon={Ellipsis} />
+              <LikeButton />
+              <ShareButton />
+              <ImageDrawer />
+              <MoreDropdown />
             </div>
           </div>
         </div>

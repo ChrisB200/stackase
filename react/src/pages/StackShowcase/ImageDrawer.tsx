@@ -1,18 +1,28 @@
+import InteractionButton from "@/components/InteractionButton";
 import PanelMasonry from "@/components/PanelMasonry";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import usePanelSelection from "@/hooks/usePanelSelection";
+import { Search } from "lucide-react";
 import type { ReactNode } from "react";
 
-interface Props {
-  children: ReactNode;
-}
-
-function ImageDrawer({ children }: Props) {
+function ImageDrawer() {
   const { panels } = usePanelSelection();
 
   return (
-    <Drawer direction="right">
-      <DrawerTrigger asChild>{children}</DrawerTrigger>
+    <Drawer direction="bottom">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DrawerTrigger asChild>
+            <InteractionButton Icon={Search} />
+          </DrawerTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Find Similar</TooltipContent>
+      </Tooltip>
       <DrawerContent>
         <PanelMasonry panels={panels} />
       </DrawerContent>

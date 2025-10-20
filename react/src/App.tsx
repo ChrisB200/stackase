@@ -14,12 +14,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthCallback from "./pages/AuthCallback/AuthCallback";
 import UserStacks from "./pages/UserStacks/UserStacks";
 import StackShowcase from "./pages/StackShowcase/StackShowcase";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <UserProvider>
       <ThemeProvider defaultTheme="system" storageKey="ui-theme">
         <FormStoreProvider>
+          <Toaster toastOptions={{ duration: 1000 }} />
           <Routes>
             <Route path="/signup" element={<Signup />} />
             <Route path="/verify" element={<Verify />} />
