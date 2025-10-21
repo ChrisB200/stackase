@@ -4,6 +4,8 @@ import type { Panel } from "@/types/panel";
 import PanelShowcase from "./PanelShowcase";
 import PanelElement from "@/components/PanelElement";
 import PanelMasonry from "@/components/PanelMasonry";
+import PanelTitle from "@/components/PanelTitle";
+import { AnimatePresence, LayoutGroup } from "motion/react";
 
 function StackOverview() {
   const {
@@ -28,14 +30,16 @@ function StackOverview() {
 
   return (
     <div className="px-6">
-      <h1 className="text-center text-comic text-5xl mt-15 mb-15">
-        {stack.title.toUpperCase()}
-      </h1>
-      {hasSelectedPanel ? (
-        <PanelShowcase />
-      ) : (
-        <PanelMasonry panels={panels} onPanelClick={handleClick} />
-      )}
+      <PanelTitle username={stack.username} title={stack.title} />
+      <AnimatePresence>
+        <LayoutGroup>
+          {hasSelectedPanel ? (
+            <PanelShowcase />
+          ) : (
+            <PanelMasonry panels={panels} onPanelClick={handleClick} />
+          )}
+        </LayoutGroup>
+      </AnimatePresence>
     </div>
   );
 }

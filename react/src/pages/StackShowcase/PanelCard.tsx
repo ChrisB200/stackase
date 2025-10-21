@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STORAGE_URL } from "@/config/constants";
 import type { Panel } from "@/types/panel";
+import { motion } from "motion/react";
 
 interface Props {
   panel: Panel;
@@ -13,7 +14,8 @@ function PanelCard({ panel }: Props) {
   const [error, setError] = useState(false);
 
   return (
-    <div
+    <motion.div
+      layoutId={`panel-${panel.id}`}
       className={cn(
         "relative flex items-center justify-center overflow-hidden",
         "w-full h-full max-w-[75vw] max-h-[60vh] md:max-w-[800px] md:max-h-[600px]",
@@ -47,7 +49,7 @@ function PanelCard({ panel }: Props) {
           Failed to load image
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

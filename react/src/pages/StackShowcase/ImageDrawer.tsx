@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
-function ImageDrawer({ id }: { id?: string }) {
+function ImageDrawer({ id }: { id?: number }) {
   const [panels, setPanels] = useState<PanelIncludeStack[] | null>(null);
 
   useEffect(() => {
