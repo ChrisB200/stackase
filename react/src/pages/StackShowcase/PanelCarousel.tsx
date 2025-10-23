@@ -29,9 +29,9 @@ export function PanelCarousel() {
     const scrollToSelected = () => {
       // 👇 only scroll if change came from outside (e.g., Back button)
       if (!internalChange.current) {
-        api.scrollTo(selectedPanel ? selectedPanel.position : 0, true);
       }
       internalChange.current = false; // reset after handling
+      api.scrollTo(selectedPanel ? selectedPanel.position : 0, true);
     };
 
     scrollToSelected();

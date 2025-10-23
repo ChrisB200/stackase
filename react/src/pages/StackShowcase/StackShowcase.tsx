@@ -1,6 +1,7 @@
 import { StackProvider } from "@/contexts/StackContext";
 import StackOverview from "./StackOverview";
 import { useParams } from "react-router-dom";
+import PageLayout from "@/layouts/PageLayout";
 
 function StackShowcase() {
   const { username, stackTitle } = useParams();
@@ -8,9 +9,11 @@ function StackShowcase() {
   if (!username || !stackTitle) return <div>404</div>;
 
   return (
-    <StackProvider username={username} stackTitle={stackTitle}>
-      <StackOverview />
-    </StackProvider>
+    <PageLayout>
+      <StackProvider username={username} stackTitle={stackTitle}>
+        <StackOverview />
+      </StackProvider>
+    </PageLayout>
   );
 }
 

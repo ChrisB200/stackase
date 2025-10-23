@@ -17,7 +17,7 @@ function PanelCard({ panel }: Props) {
     <motion.div
       layoutId={`panel-${panel.id}`}
       className={cn(
-        "relative flex items-center justify-center overflow-hidden",
+        "relative flex items-center justify-center overflow-hidden rounded-xl",
         "w-full h-full max-w-[75vw] max-h-[60vh] md:max-w-[800px] md:max-h-[600px]",
       )}
     >
@@ -27,21 +27,23 @@ function PanelCard({ panel }: Props) {
       )}
 
       {/* Actual image */}
-      <img
-        src={`${STORAGE_URL}/panels/${panel.id}.png`}
-        alt={panel.caption}
-        onLoad={() => setLoaded(true)}
-        onError={() => {
-          setError(true);
-          setLoaded(true);
-        }}
-        className={cn(
-          "object-contain w-full h-full transition-opacity duration-500",
-          loaded && !error ? "opacity-100" : "opacity-0",
-        )}
-        loading="eager"
-        draggable={false}
-      />
+      <div className="w-full h-full">
+        <img
+          src={`${STORAGE_URL}/panels/${panel.id}.png`}
+          alt={panel.caption}
+          onLoad={() => setLoaded(true)}
+          onError={() => {
+            setError(true);
+            setLoaded(true);
+          }}
+          className={cn(
+            "object-contain w-full h-full transition-opacity duration-500 rounded-xl",
+            loaded && !error ? "opacity-100" : "opacity-0",
+          )}
+          loading="eager"
+          draggable={false}
+        />
+      </div>
 
       {/* Error fallback */}
       {error && (

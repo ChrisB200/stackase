@@ -78,6 +78,7 @@ function usePanelSelection() {
 
     if (!id) {
       setHasSelectedPanel(false);
+      setSelectedPanelId(null);
       return;
     }
 

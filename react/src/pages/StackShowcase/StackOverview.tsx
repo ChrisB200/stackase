@@ -31,7 +31,7 @@ function StackOverview() {
   return (
     <div className="px-6">
       <PanelTitle username={stack.username} title={stack.title} />
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         <LayoutGroup>
           {hasSelectedPanel ? (
             <PanelShowcase />

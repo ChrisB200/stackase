@@ -1,4 +1,3 @@
-import PanelImg from "@/pages/Home/PanelImg";
 import type { Panel, PanelIncludeStack } from "@/types/panel";
 import PanelElement from "./PanelElement";
 import { cn } from "@/lib/utils";
