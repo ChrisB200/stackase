@@ -1,6 +1,5 @@
 import { STORAGE_URL } from "@/config/constants";
 import type { Panel, PanelIncludeStack } from "@/types/panel";
-import { motion } from "motion/react";
 
 interface PanelElementProps extends React.HTMLAttributes<HTMLDivElement> {
   panel: PanelIncludeStack | Panel;
@@ -13,7 +12,7 @@ function PanelElement({
   ...rest
 }: PanelElementProps) {
   return (
-    <motion.div layoutId={`panel-${panel.id}`}>
+    <div>
       <div
         className={`w-full hover:cursor-pointer rounded-xl mb-6  ${className}`}
         onClick={onClick}
@@ -24,7 +23,7 @@ function PanelElement({
           src={`${STORAGE_URL}/panels/${panel.id}.png`}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }
 

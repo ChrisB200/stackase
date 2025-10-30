@@ -78,15 +78,13 @@ function usePanelSelection() {
 
     if (!id) {
       setHasSelectedPanel(false);
-      setSelectedPanelId(null);
       return;
     }
 
-    // deduplicates
+    setHasSelectedPanel(true);
     if (id === selectedPanelId) return;
 
     setSelectedPanelId(id);
-    setHasSelectedPanel(true);
   }, [stack, searchParams]);
 
   // synchronising selectedPanel and selectedPanelId

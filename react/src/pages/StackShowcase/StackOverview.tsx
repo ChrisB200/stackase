@@ -1,11 +1,9 @@
-import { STORAGE_URL } from "@/config/constants";
 import usePanelSelection from "@/hooks/usePanelSelection";
 import type { Panel } from "@/types/panel";
 import PanelShowcase from "./PanelShowcase";
-import PanelElement from "@/components/PanelElement";
 import PanelMasonry from "@/components/PanelMasonry";
 import PanelTitle from "@/components/PanelTitle";
-import { AnimatePresence, LayoutGroup } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 function StackOverview() {
   const {
@@ -31,14 +29,28 @@ function StackOverview() {
   return (
     <div className="px-6">
       <PanelTitle username={stack.username} title={stack.title} />
-      <AnimatePresence initial={false}>
-        <LayoutGroup>
-          {hasSelectedPanel ? (
+      <AnimatePresence mode="wait">
+        {hasSelectedPanel ? (
+          <motion.div
+            key="showcase"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <PanelShowcase />
-          ) : (
+          </motion.div>
+        ) : (
+          <motion.div
+            key="masonry"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <PanelMasonry panels={panels} onPanelClick={handleClick} />
-          )}
-        </LayoutGroup>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
