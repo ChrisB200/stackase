@@ -340,6 +340,11 @@ export interface ExtensionsPgStatStatementsInfo {
   statsReset: Timestamp | null;
 }
 
+export interface Likes {
+  panelId: number;
+  userId: string;
+}
+
 export interface NetHttpRequestQueue {
   body: Buffer | null;
   headers: Json;
@@ -581,6 +586,7 @@ export interface DB {
   "auth.users": AuthUsers;
   "extensions.pgStatStatements": ExtensionsPgStatStatements;
   "extensions.pgStatStatementsInfo": ExtensionsPgStatStatementsInfo;
+  likes: Likes;
   "net.httpRequestQueue": NetHttpRequestQueue;
   "net.HttpResponse": NetHttpResponse;
   panels: Panels;

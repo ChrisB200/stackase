@@ -106,4 +106,21 @@ const findSimilarPanels: RequestHandler = async (req, res) => {
   res.status(200).json(panels);
 };
 
-export { createPanel, getPanels, findSimilarPanels };
+const likePanel: RequestHandler = async (req, res) => {
+  const user = req.session.user!;
+  const { panelId } = req.params;
+
+  if (!panelId) throw new AppError("No panel id", 400, "INVALID_FIELDS");
+
+  const parsedPanelId = parseInt(panelId);
+
+  const like = await db
+    .insertInto("likes")
+    .values({ panelId: parsedPanelId, userId: user.id })
+    .returningAll()
+    .executeTakeFirstOrThrow();
+
+  res.status(200).json(like);
+};
+
+export { createPanel, getPanels, findSimilarPanels, likePanel };

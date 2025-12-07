@@ -20,3 +20,12 @@ export interface getPanelsReqQuery {
 }
 
 export type GetPanelsRequest = Panel | PanelIncludeStack;
+
+export interface FileWithUrl extends File {
+  url: string;
+}
+
+export interface IncompletePanel {
+  caption?: string;
+  file?: FileWithUrl;
+}

@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
 } from "@/components/ui/sidebar";
 import { NavUser } from "./NavUser";
 
@@ -17,7 +16,7 @@ function AppSidebar() {
   const items = [
     {
       title: "Home",
-      url: "",
+      url: "/",
       icon: Home,
     },
     {

@@ -15,6 +15,8 @@ import AuthCallback from "./pages/AuthCallback/AuthCallback";
 import UserStacks from "./pages/UserStacks/UserStacks";
 import StackShowcase from "./pages/StackShowcase/StackShowcase";
 import { Toaster } from "sonner";
+import StackCreation from "./pages/StackCreation/StackCreation";
+import { UploadProvider } from "./contexts/UploadContext";
 
 function App() {
   return (
@@ -34,6 +36,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/onboarding" element={<CompleteSignup />} />
+              <Route
+                path="/upload"
+                element={
+                  <UploadProvider>
+                    <StackCreation />
+                  </UploadProvider>
+                }
+              />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
