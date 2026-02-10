@@ -41,7 +41,7 @@ function PanelShowcase() {
                 <Skeleton className="w-[200px] h-[20px]" />
               )}
             </AnimatePresence>
-            <div className="flex gap-6">
+            <div className="flex gap-6 justify-center">
               <LikeButton />
               <ShareButton />
               <ImageDrawer id={selectedPanel?.id || undefined} />

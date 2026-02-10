@@ -12,9 +12,12 @@ function PanelElement({
   ...rest
 }: PanelElementProps) {
   return (
-    <div>
+    <div className="relative">
+      <p className="absolute -top-6 text-muted-foreground">
+        {panel.position + 1}.
+      </p>
       <div
-        className={`w-full hover:cursor-pointer rounded-xl mb-6  ${className}`}
+        className={`w-full hover:cursor-pointer rounded-xl mb-12  ${className}`}
         onClick={onClick}
         {...rest}
       >

@@ -20,6 +20,9 @@ function ImageDrawer({ id }: { id?: number }) {
   useEffect(() => {
     const fetch = async () => {
       const panels = await getSimilarPanels(id);
+      panels.forEach((panel, i) => {
+        panel.position = i;
+      });
       setPanels(panels);
     };
     fetch();
@@ -36,7 +39,9 @@ function ImageDrawer({ id }: { id?: number }) {
         <TooltipContent>Find Similar</TooltipContent>
       </Tooltip>
       <DrawerContent>
-        {panels ? <PanelMasonry panels={panels} /> : ""}
+        <div className="overflow-y-scroll py-20">
+          {panels ? <PanelMasonry panels={panels} /> : ""}
+        </div>
       </DrawerContent>
     </Drawer>
   );
