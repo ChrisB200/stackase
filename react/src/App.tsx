@@ -37,7 +37,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/onboarding" element={<CompleteSignup />} />
               <Route
-                path="/upload"
+                path="/create"
                 element={
                   <UploadProvider>
                     <StackCreation />

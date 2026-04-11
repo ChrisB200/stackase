@@ -27,7 +27,9 @@ function Home() {
   return (
     <PageLayout>
       <div className="mt-6 px-6">
-        <h1 className="text-center text-comic text-5xl mb-15 mt-15">Panels</h1>
+        <h1 className="text-center text-comic text-6xl mb-15 mt-15">
+          STACKASE
+        </h1>
         <PanelMasonry panels={data} onPanelClick={handleClick} />
       </div>
     </PageLayout>

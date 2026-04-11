@@ -1,0 +1,124 @@
+"use client";
+
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import type { Panel, PanelIncludeStack } from "@/types/panel";
+import PanelElement from "./PanelElement";
+
+interface Props {
+  panels: PanelIncludeStack[] | Panel[];
+  onPanelClick?: (panel: PanelIncludeStack | Panel) => void;
+  className?: string;
+  isOrder?: boolean;
+}
+
+export default function PanelMasonry({
+  panels,
+  onPanelClick,
+  className,
+  isOrder,
+}: Props) {
+  const [hoveredPanel, setHoveredPanel] = React.useState<
+    PanelIncludeStack | Panel | null
+  >(null);
+
+  const [targetMouse, setTargetMouse] = React.useState({ x: 0, y: 0 });
+  const [renderMouse, setRenderMouse] = React.useState({ x: 0, y: 0 });
+
+  const animationFrameRef = React.useRef<number | null>(null);
+
+  const handleClick = (panel: PanelIncludeStack | Panel) => {
+    onPanelClick?.(panel);
+  };
+
+  React.useEffect(() => {
+    if (!hoveredPanel) {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      return;
+    }
+
+    const animate = () => {
+      setRenderMouse((prev) => {
+        const dx = targetMouse.x - prev.x;
+        const dy = targetMouse.y - prev.y;
+
+        const next = {
+          x: prev.x + dx * 0.18,
+          y: prev.y + dy * 0.18,
+        };
+
+        return next;
+      });
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [hoveredPanel, targetMouse]);
+
+  return (
+    <>
+      <div className="flex justify-center">
+        <div
+          className={cn(
+            "columns-[250px] md:columns-[300px] w-full max-w-[1200px]",
+            className,
+          )}
+        >
+          {panels.map((panel) => (
+            <div
+              key={panel.id}
+              className="mb-4 break-inside-avoid"
+              onMouseEnter={(e) => {
+                const nextMouse = {
+                  x: e.clientX + 16,
+                  y: e.clientY + 16,
+                };
+
+                setHoveredPanel(panel);
+                setTargetMouse(nextMouse);
+                setRenderMouse(nextMouse);
+              }}
+              onMouseLeave={() => {
+                setHoveredPanel((current) =>
+                  current?.id === panel.id ? null : current,
+                );
+              }}
+              onMouseMove={(e) => {
+                setTargetMouse({
+                  x: e.clientX + 16,
+                  y: e.clientY + 16,
+                });
+              }}
+            >
+              <PanelElement
+                panel={panel}
+                onClick={() => handleClick(panel)}
+                isOrder={isOrder}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {hoveredPanel && (
+        <div
+          className="pointer-events-none fixed z-50 rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md will-change-transform"
+          style={{
+            transform: `translate3d(${renderMouse.x}px, ${renderMouse.y}px, 0)`,
+          }}
+        >
+          {hoveredPanel.media}
+        </div>
+      )}
+    </>
+  );
+}

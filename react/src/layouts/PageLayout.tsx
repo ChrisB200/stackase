@@ -1,12 +1,18 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar/AppSidebar";
 import type { ReactNode } from "react";
 
 function PageLayout({ children }: { children: ReactNode }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex min-h-screen w-full">
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <AppSidebar />
+        <main className="flex-1 relative">
+          <div className="p-4 fixed">
+            <SidebarTrigger />
+          </div>
+          {children}
+        </main>
       </div>
     </SidebarProvider>
   );

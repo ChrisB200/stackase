@@ -48,7 +48,11 @@ function StackOverview() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <PanelMasonry panels={panels} onPanelClick={handleClick} />
+            <PanelMasonry
+              panels={panels}
+              onPanelClick={handleClick}
+              isOrder={true}
+            />
           </motion.div>
         )}
       </AnimatePresence>

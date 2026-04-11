@@ -13,20 +13,18 @@ function PanelShowcase() {
   const { selectedPanel, removeSelectedPanel } = usePanelSelection();
 
   return (
-    // let the page grow if the caption goes below the fold
     <>
       <InteractionButton
         onClick={removeSelectedPanel}
         className="absolute top-4 left-4"
         Icon={MoveLeft}
       />
-      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">
-        <div className="relative">
+
+      <div className="w-full flex justify-center">
+        <div className="relative flex flex-col items-center">
           <PanelCarousel />
 
-          {/* docked 20px under the carousel, horizontally centered */}
-
-          <div className="flex flex-col gap-8 absolute left-1/2 -translate-x-1/2 top-full mt-[32px] text-center">
+          <div className="absolute top-full mt-8 left-1/2 -translate-x-1/2 w-full max-w-md flex flex-col items-center gap-8 text-center">
             <AnimatePresence mode="wait">
               {selectedPanel ? (
                 <motion.p
@@ -34,6 +32,7 @@ function PanelShowcase() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="w-full"
                 >
                   {selectedPanel.caption}
                 </motion.p>
@@ -41,7 +40,8 @@ function PanelShowcase() {
                 <Skeleton className="w-[200px] h-[20px]" />
               )}
             </AnimatePresence>
-            <div className="flex gap-6 justify-center">
+
+            <div className="flex justify-center gap-6">
               <LikeButton />
               <ShareButton />
               <ImageDrawer id={selectedPanel?.id || undefined} />

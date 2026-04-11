@@ -7,15 +7,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import usePanelSelection from "@/hooks/usePanelSelection";
 import { getSimilarPanels } from "@/services/panelsService";
 import type { PanelIncludeStack } from "@/types/panel";
-import { useQuery } from "@tanstack/react-query";
+import { createStackURL } from "@/utils/url";
 import { Search } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ImageDrawer({ id }: { id?: number }) {
   const [panels, setPanels] = useState<PanelIncludeStack[] | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetch = async () => {
@@ -27,6 +28,12 @@ function ImageDrawer({ id }: { id?: number }) {
     };
     fetch();
   }, [id]);
+
+  const onPanelClick = (panel: PanelIncludeStack) => {
+    const url = createStackURL(panel.username, panel.title, panel.id);
+    navigate(`/${url}`);
+    window.location.reload();
+  };
 
   return (
     <Drawer direction="bottom">
@@ -40,7 +47,15 @@ function ImageDrawer({ id }: { id?: number }) {
       </Tooltip>
       <DrawerContent>
         <div className="overflow-y-scroll py-20">
-          {panels ? <PanelMasonry panels={panels} /> : ""}
+          {panels ? (
+            <PanelMasonry
+              panels={panels}
+              isOrder={true}
+              onPanelClick={onPanelClick}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </DrawerContent>
     </Drawer>

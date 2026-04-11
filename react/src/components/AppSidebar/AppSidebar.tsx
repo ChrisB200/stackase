@@ -12,41 +12,38 @@ import {
 } from "@/components/ui/sidebar";
 import { NavUser } from "./NavUser";
 
-function AppSidebar() {
-  const items = [
-    {
-      title: "Home",
-      url: "/",
-      icon: Home,
-    },
-    {
-      title: "Explore",
-      url: "",
-      icon: Compass,
-    },
-    {
-      title: "Create",
-      url: "",
-      icon: SquarePlus,
-    },
-    {
-      title: "Stacks",
-      url: "",
-      icon: SquareStack,
-    },
-  ];
+const items = [
+  { title: "Home", url: "/", icon: Home },
+  { title: "Explore", url: "/explore", icon: Compass },
+  { title: "Create", url: "/create", icon: SquarePlus },
+  { title: "Stacks", url: "/stacks", icon: SquareStack },
+];
 
+function AppSidebar() {
   return (
-    <Sidebar className="w-fit">
-      <SidebarHeader>Logo</SidebarHeader>
+    <Sidebar collapsible="icon" className="border-r">
+      <SidebarHeader className="flex items-center justify-center p-4 text-lg font-semibold">
+        Logo
+      </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
+          <SidebarMenu className="px-2">
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url}>
-                    <item.icon />
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  className="h-12 justify-start px-3 text-base group-data-[collapsible=icon]:justify-center"
+                >
+                  <a
+                    href={item.url}
+                    className="flex w-full items-center gap-3 group-data-[collapsible=icon]:w-auto"
+                  >
+                    <item.icon className="h-5 w-5 shrink-0" />
+                    <span className="truncate group-data-[collapsible=icon]:hidden">
+                      {item.title}
+                    </span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -54,7 +51,8 @@ function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+
+      <SidebarFooter className="p-2">
         <NavUser />
       </SidebarFooter>
     </Sidebar>

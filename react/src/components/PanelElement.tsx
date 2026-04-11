@@ -3,19 +3,27 @@ import type { Panel, PanelIncludeStack } from "@/types/panel";
 
 interface PanelElementProps extends React.HTMLAttributes<HTMLDivElement> {
   panel: PanelIncludeStack | Panel;
+  isOrder?: boolean;
+  isOrderOffset?: number;
 }
 
 function PanelElement({
   panel,
   className = "",
+  isOrder,
+  isOrderOffset = 0,
   onClick,
   ...rest
 }: PanelElementProps) {
   return (
     <div className="relative">
-      <p className="absolute -top-6 text-muted-foreground">
-        {panel.position + 1}.
-      </p>
+      {isOrder ? (
+        <p className="absolute -top-6 text-muted-foreground">
+          {panel.position + 1 + isOrderOffset}.
+        </p>
+      ) : (
+        ""
+      )}
       <div
         className={`w-full hover:cursor-pointer rounded-xl mb-12  ${className}`}
         onClick={onClick}
