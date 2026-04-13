@@ -8,14 +8,22 @@ import {
 } from "@/components/ui/tooltip";
 
 interface Props {
-  panels: PanelIncludeStack[];
+  panels: PanelIncludeStack[] | Panel[];
   onPanelClick?: any;
   className?: string;
   isOrder?: boolean;
+  /** When true, the first panel is omitted (e.g. similar-results drawer matches current image). */
+  skipFirstPanel?: boolean;
 }
 
-function PanelMasonry({ panels, onPanelClick, isOrder, className }: Props) {
-  const handleClick = (panel: PanelIncludeStack) => {
+function PanelMasonry({
+  panels,
+  onPanelClick,
+  isOrder,
+  className,
+  skipFirstPanel = false,
+}: Props) {
+  const handleClick = (panel: PanelIncludeStack | Panel) => {
     if (onPanelClick) {
       onPanelClick(panel);
     }
@@ -28,22 +36,26 @@ function PanelMasonry({ panels, onPanelClick, isOrder, className }: Props) {
           className,
         )}
       >
-        {panels
-          .filter((panel, i) => i != 0)
-          .map((panel) => (
-            <Tooltip>
+        {(skipFirstPanel ? panels.filter((_, i) => i !== 0) : panels).map(
+          (panel) => (
+            <Tooltip key={panel.id}>
               <TooltipTrigger asChild>
                 <PanelElement
                   panel={panel}
-                  key={panel.id}
                   onClick={() => handleClick(panel)}
                   isOrder={isOrder}
-                  isOrderOffset={-1}
                 />
               </TooltipTrigger>
-              <TooltipContent>{panel?.title}</TooltipContent>
+              <TooltipContent>
+                {"title" in panel
+                  ? panel.title
+                  : "media" in panel
+                    ? panel.caption
+                    : ""}
+              </TooltipContent>
             </Tooltip>
-          ))}
+          ),
+        )}
       </div>
     </div>
   );

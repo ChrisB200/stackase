@@ -26,6 +26,7 @@ export interface FileWithUrl extends File {
 }
 
 export interface IncompletePanel {
+  id: string;
   caption?: string;
   file?: FileWithUrl;
 }

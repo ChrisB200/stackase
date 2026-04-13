@@ -13,8 +13,10 @@ const createPanel: RequestHandler = async (req, res) => {
 
   if (!file) throw new AppError("Missing panelImage", 400, "MISSING_FIELDS");
 
-  if (!caption || !stackId)
-    throw new AppError("Missing fields", 400, "MISSING_FIELDS");
+  if (stackId === undefined || stackId === null || String(stackId).trim() === "")
+    throw new AppError("Missing stack id", 400, "MISSING_FIELDS");
+
+  const captionText = typeof caption === "string" ? caption : "";
 
   if (!format)
     throw new AppError("No format was provided", 400, "MISSING_FIELDS");
@@ -25,16 +27,28 @@ const createPanel: RequestHandler = async (req, res) => {
   if (!media)
     throw new AppError("No media was provided", 400, "MISSING_FIELDS");
 
+  const stackIdNum = Number(stackId);
+  if (Number.isNaN(stackIdNum))
+    throw new AppError("Invalid stack id", 400, "INVALID_FIELDS");
+
   const maxResult = await db
     .selectFrom("panels")
     .select(({ fn }) => fn.max("position").as("maxPosition"))
+    .where("stackId", "=", stackIdNum)
     .executeTakeFirst();
 
   const position = (maxResult?.maxPosition ?? -1) + 1;
 
   const panel = await db
     .insertInto("panels")
-    .values({ caption, stackId, origin, media, format, position })
+    .values({
+      caption: captionText,
+      stackId: stackIdNum,
+      origin,
+      media,
+      format,
+      position,
+    })
     .returningAll()
     .executeTakeFirstOrThrow();
 
@@ -56,10 +70,11 @@ const createPanel: RequestHandler = async (req, res) => {
   }
 
   try {
-    const response = await requestML({
+    await requestML({
       method: "post",
       url: "/images",
       data: { key },
+      timeout: 120_000,
     });
   } catch (error) {
     await rollbackStorage("panels", key);

@@ -28,6 +28,8 @@ export interface RequestML<T = any> {
   data?: any;
   params?: any;
   headers?: Record<string, string>;
+  /** Override default ML client timeout (ms). */
+  timeout?: number;
 }
 
 export async function requestML<T = any>(
@@ -39,6 +41,7 @@ export async function requestML<T = any>(
     data: options.data,
     params: options.params,
     headers: options.headers,
+    timeout: options.timeout ?? 10_000,
   };
 
   let response;

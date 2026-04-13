@@ -20,8 +20,8 @@ function PanelShowcase() {
         Icon={MoveLeft}
       />
 
-      <div className="w-full flex justify-center">
-        <div className="relative flex flex-col items-center">
+      <div className="flex min-h-[65vh] w-full flex-col items-center justify-center">
+        <div className="relative flex w-full max-w-full flex-col items-center">
           <PanelCarousel />
 
           <div className="absolute top-full mt-8 left-1/2 -translate-x-1/2 w-full max-w-md flex flex-col items-center gap-8 text-center">

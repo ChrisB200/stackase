@@ -7,15 +7,15 @@ import PageLayout from "@/layouts/PageLayout";
 
 function StackCreation() {
   const { user } = useUser();
-  const { currentPanel } = useUpload();
+  const { panels } = useUpload();
 
   if (!user) return;
 
   return (
     <PageLayout>
-      <StackTitle username={user.username!} count={19} />
-      <div className="">
-        {!currentPanel.file ? <UploadPanels /> : <PanelEditor />}
+      <StackTitle username={user.username!} />
+      <div className="flex justify-center items-center px-4">
+        {panels.length === 0 ? <UploadPanels /> : <PanelEditor />}
       </div>
     </PageLayout>
   );

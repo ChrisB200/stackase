@@ -8,3 +8,7 @@ export function getStack(id: number) {
 export function getStackByUsernameTitle(username: string, stackTitle: string) {
   return request<StackWithPanels>("get", `stacks/${username}/${stackTitle}`);
 }
+
+export function createStackRequest(title: string) {
+  return request<Stack>("post", "/stacks", { title });
+}

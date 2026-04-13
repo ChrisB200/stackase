@@ -1,4 +1,3 @@
-import { upload } from "../config/multer";
 import {
   createPanel,
   findSimilarPanels,
@@ -6,11 +5,12 @@ import {
   likePanel,
 } from "../controllers/panelController";
 import protectedRoute from "../middleware/protectedRoute";
+import { uploadPanelImage } from "../middleware/uploadPanelImage";
 import { Router } from "express";
 
 const router = Router();
 
-router.post("/", [protectedRoute, upload.single("panelImage")], createPanel);
+router.post("/", [protectedRoute, uploadPanelImage], createPanel);
 router.get("/", getPanels);
 router.post("/search", findSimilarPanels);
 router.post("/:panelId/like", protectedRoute, likePanel);

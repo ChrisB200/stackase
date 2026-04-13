@@ -51,6 +51,7 @@ function ImageDrawer({ id }: { id?: number }) {
             <PanelMasonry
               panels={panels}
               isOrder={true}
+              skipFirstPanel
               onPanelClick={onPanelClick}
             />
           ) : (

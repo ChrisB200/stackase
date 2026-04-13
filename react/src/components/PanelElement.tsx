@@ -1,38 +1,58 @@
 import { STORAGE_URL } from "@/config/constants";
+import { cn } from "@/lib/utils";
 import type { Panel, PanelIncludeStack } from "@/types/panel";
 
 interface PanelElementProps extends React.HTMLAttributes<HTMLDivElement> {
-  panel: PanelIncludeStack | Panel;
+  panel?: Panel | PanelIncludeStack;
+  /** Local preview (e.g. object URL) during stack creation */
+  previewSrc?: string;
+  /** 1-based order label above the panel (draft editor) */
+  orderDisplay?: number;
   isOrder?: boolean;
   isOrderOffset?: number;
 }
 
 function PanelElement({
   panel,
+  previewSrc,
+  orderDisplay,
   className = "",
   isOrder,
   isOrderOffset = 0,
   onClick,
   ...rest
 }: PanelElementProps) {
+  const src =
+    previewSrc ??
+    (panel != null ? `${STORAGE_URL}/panels/${panel.id}.png` : "");
+
+  const showDraftOrder = orderDisplay != null;
+  const showSavedOrder = Boolean(isOrder && panel);
+
   return (
     <div className="relative">
-      {isOrder ? (
+      {showDraftOrder ? (
+        <p className="absolute -top-6 text-muted-foreground">{orderDisplay}.</p>
+      ) : showSavedOrder ? (
         <p className="absolute -top-6 text-muted-foreground">
-          {panel.position + 1 + isOrderOffset}.
+          {panel!.position + 1 + isOrderOffset}.
         </p>
-      ) : (
-        ""
-      )}
+      ) : null}
       <div
-        className={`w-full hover:cursor-pointer rounded-xl mb-12  ${className}`}
+        className={cn(
+          "mb-12 w-full rounded-xl hover:cursor-pointer",
+          className,
+        )}
         onClick={onClick}
         {...rest}
       >
-        <img
-          className="w-full border-transparent rounded-xl border-2 hover:border-accent transition-colors duration-300"
-          src={`${STORAGE_URL}/panels/${panel.id}.png`}
-        />
+        {src ? (
+          <img
+            className="w-full rounded-xl border-2 border-transparent transition-colors duration-300 hover:border-accent"
+            src={src}
+            alt=""
+          />
+        ) : null}
       </div>
     </div>
   );

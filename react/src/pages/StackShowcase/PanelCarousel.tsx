@@ -45,30 +45,30 @@ export function PanelCarousel() {
   }, [api, handleSelect, selectedPanel]);
 
   return (
-    <div className="relative flex justify-center w-[80vw] min-h-[60vh]">
+    <div className="relative flex w-full max-w-[80vw] flex-col items-center justify-center">
       <Carousel
-        className="w-full"
+        className="relative w-full max-w-full"
         setApi={setApi}
         opts={{ loop: true, align: "center" }}
       >
-        <CarouselContent>
+        <CarouselContent className="-ml-0">
           {panels && panels.length > 0 ? (
             panels.map((panel) => (
               <CarouselItem
-                className="flex justify-center items-center"
+                className="flex min-h-[min(60vh,600px)] basis-full items-center justify-center pl-0"
                 key={panel.id}
               >
                 <PanelCard panel={panel} />
               </CarouselItem>
             ))
           ) : (
-            <CarouselItem className="relative max-w-[75vw] max-h-[60vh]">
-              <Skeleton className="absolute inset-0 w-full h-full rounded-md" />
+            <CarouselItem className="flex min-h-[min(60vh,600px)] basis-full items-center justify-center pl-0">
+              <Skeleton className="h-[50vh] w-full max-w-[75vw] rounded-md md:max-w-[800px]" />
             </CarouselItem>
           )}
         </CarouselContent>
-        <CarouselPrevious className="z-20 absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8" />
-        <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8" />
+        <CarouselPrevious className="absolute top-1/2 left-0 z-20 -translate-x-8 -translate-y-1/2" />
+        <CarouselNext className="absolute top-1/2 right-0 z-20 translate-x-8 -translate-y-1/2" />
       </Carousel>
     </div>
   );

@@ -1,18 +1,26 @@
 import { db } from "../config/database";
 import { supabase } from "../config/supabase";
-import AppError from "./appError";
 
+/** Best-effort storage delete; never throws (file may not exist if upload never completed). */
 export async function rollbackStorage(bucket: string, key: string) {
   const { error } = await supabase.storage.from(bucket).remove([key]);
-  if (error) throw new AppError(error.message, 500, "STORAGE_ERROR");
-  return "success";
+  if (error) {
+    console.error(
+      `[rollbackStorage] could not remove ${bucket}/${key}:`,
+      error.message,
+    );
+  }
 }
 
+/** Best-effort row delete; logs on failure. */
 export async function rollbackInsert(table: string, id: string | number) {
-  const result = await db
-    .deleteFrom(table as any)
-    .where("id", "=", id)
-    .execute();
-
-  return result;
+  try {
+    const numericId = typeof id === "number" ? id : Number(id);
+    await db
+      .deleteFrom(table as "panels")
+      .where("id", "=", numericId)
+      .execute();
+  } catch (e) {
+    console.error(`[rollbackInsert] could not delete ${table} id=${id}:`, e);
+  }
 }
