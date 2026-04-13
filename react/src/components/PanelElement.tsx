@@ -10,6 +10,7 @@ interface PanelElementProps extends React.HTMLAttributes<HTMLDivElement> {
   orderDisplay?: number;
   isOrder?: boolean;
   isOrderOffset?: number;
+  skipFirstPanel?: boolean;
 }
 
 function PanelElement({
@@ -20,6 +21,7 @@ function PanelElement({
   isOrder,
   isOrderOffset = 0,
   onClick,
+  skipFirstPanel,
   ...rest
 }: PanelElementProps) {
   const src =
@@ -35,7 +37,7 @@ function PanelElement({
         <p className="absolute -top-6 text-muted-foreground">{orderDisplay}.</p>
       ) : showSavedOrder ? (
         <p className="absolute -top-6 text-muted-foreground">
-          {panel!.position + 1 + isOrderOffset}.
+          {panel!.position + (skipFirstPanel ? 0 : 1) + isOrderOffset}.
         </p>
       ) : null}
       <div

@@ -44,6 +44,7 @@ function PanelMasonry({
                   panel={panel}
                   onClick={() => handleClick(panel)}
                   isOrder={isOrder}
+                  skipFirstPanel
                 />
               </TooltipTrigger>
               <TooltipContent>
